@@ -29,12 +29,17 @@ jobs:
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Install dependencies
         run: npm ci
 
+      - name: Build shared workspace for type resolution
+        run: npm run build -w shared
+
       - name: Typecheck
-        run: npm run typecheck
+        run: npm run typecheck -w client && npm run typecheck -w server
 
       - name: Build static frontend preview
         run: npm run build:pages
