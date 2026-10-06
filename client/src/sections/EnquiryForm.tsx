@@ -61,7 +61,25 @@ export function EnquiryForm() {
           <FormField kind="select" label="Preferred contact method" name="preferredContactMethod" value={form.preferredContactMethod} onChange={(e) => set("preferredContactMethod", e.target.value)} required error={errors.preferredContactMethod}><option value="">Select an option</option><option>Phone call</option><option>Email</option><option>SMS</option></FormField>
           <FormField label="Best time to contact" name="bestTimeToContact" value={form.bestTimeToContact} onChange={(e) => set("bestTimeToContact", e.target.value)} required error={errors.bestTimeToContact} placeholder="e.g. Weekday mornings" />
         </div>
-        <fieldset className="support-options"><legend>Type of Support Needed <span aria-hidden="true">*</span></legend><p>Select all that apply.</p><div className="checkbox-grid">{serviceOptions.map((service) => <label key={service}><input type="checkbox" checked={form.serviceInterests.includes(service)} onChange={() => toggleService(service)} /><span>{service}</span></label>)}</div>{errors.serviceInterests && <span className="field-error" role="alert">{errors.serviceInterests}</span>}</fieldset>
+        <div className="support-options">
+          <label id="support-options-label">Type of Support Needed <span aria-hidden="true">*</span></label>
+          <details className="multi-select">
+            <summary aria-labelledby="support-options-label support-options-value" aria-describedby={errors.serviceInterests ? "support-options-error" : undefined}>
+              <span id="support-options-value">
+                {form.serviceInterests.length === 0
+                  ? "Select support options"
+                  : `${form.serviceInterests.length} option${form.serviceInterests.length === 1 ? "" : "s"} selected`}
+              </span>
+              <span className="multi-select__chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <fieldset className="multi-select__panel">
+              <legend className="sr-only">Select all types of support needed</legend>
+              <p>Select all that apply.</p>
+              <div className="checkbox-grid">{serviceOptions.map((service) => <label key={service}><input type="checkbox" checked={form.serviceInterests.includes(service)} onChange={() => toggleService(service)} /><span>{service}</span></label>)}</div>
+            </fieldset>
+          </details>
+          {errors.serviceInterests && <span className="field-error" id="support-options-error" role="alert">{errors.serviceInterests}</span>}
+        </div>
         <FormField kind="textarea" label="What questions do you have?" name="questions" value={form.questions} onChange={(e) => set("questions", e.target.value)} rows={5} placeholder="Tell us what you would like to ask or understand." hint="Please do not include detailed medical or sensitive personal information in this initial enquiry." />
         {status === "success" && <div className="form-status form-status--success" role="status"><strong>Thank you — your enquiry has been received.</strong><span>A team member will follow up using your preferred contact method.</span></div>}
         {status === "error" && <div className="form-status form-status--error" role="alert"><strong>We couldn't submit the form yet.</strong><span>Please review the highlighted fields or try again.</span></div>}
@@ -70,4 +88,3 @@ export function EnquiryForm() {
     </div>
   </section>;
 }
-
