@@ -75,7 +75,7 @@ The homepage content is separated from component logic where practical so approv
 
 ## Enquiry flow
 
-`POST /api/enquiries` validates the payload, generates a Lead ID and timestamp, maps the enquiry to the 19-column Google Sheet structure, then calls the Sheets and email service interfaces. Both external integrations currently log safe scaffold messages and return without making external calls.
+`POST /api/enquiries` validates the payload, generates a Lead ID and timestamp, maps the enquiry to the 19-column Google Sheet structure, then calls the Sheets and email service interfaces. Google Sheets persistence is the success boundary: the API does not return `201` unless the lead is persisted. Email is a secondary notification after persistence; a notification failure is logged and reported as `notificationSent: false` without asking the visitor to resubmit an already-saved lead. Both integrations remain unimplemented, so the API currently fails safely with `503` rather than reporting a false success.
 
 ## Future deployment
 

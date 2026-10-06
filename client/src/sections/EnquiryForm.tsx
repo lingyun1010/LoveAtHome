@@ -24,11 +24,6 @@ export function EnquiryForm() {
     if (!form.phone.trim()) next.phone = "Please enter a phone number.";
     if (form.email && !/^\S+@\S+\.\S+$/.test(form.email)) next.email = "Please enter a valid email address.";
     if (!form.suburbPostcode.trim()) next.suburbPostcode = "Please enter a suburb or postcode.";
-    if (!form.enquiryFor) next.enquiryFor = "Please tell us who the enquiry is for.";
-    if (!form.fundingType) next.fundingType = "Please select a funding type.";
-    if (!form.preferredLanguage.trim()) next.preferredLanguage = "Please enter a preferred language.";
-    if (!form.preferredContactMethod) next.preferredContactMethod = "Please select a contact method.";
-    if (!form.bestTimeToContact.trim()) next.bestTimeToContact = "Please enter a suitable contact time.";
     if (!form.serviceInterests.length) next.serviceInterests = "Please select at least one support option.";
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -61,11 +56,11 @@ export function EnquiryForm() {
           <FormField label="Phone" name="phone" type="tel" value={form.phone} onChange={(e) => set("phone", e.target.value)} required error={errors.phone} autoComplete="tel" />
           <FormField label="Email (optional)" name="email" type="email" value={form.email} onChange={(e) => set("email", e.target.value)} error={errors.email} autoComplete="email" />
           <FormField label="Suburb / postcode" name="suburbPostcode" value={form.suburbPostcode} onChange={(e) => set("suburbPostcode", e.target.value)} required error={errors.suburbPostcode} autoComplete="postal-code" />
-          <FormField kind="select" label="Who is the enquiry for?" name="enquiryFor" value={form.enquiryFor} onChange={(e) => set("enquiryFor", e.target.value)} required error={errors.enquiryFor}><option value="">Select an option</option><option>Myself</option><option>A family member</option><option>Someone I care for</option><option>Other</option></FormField>
-          <FormField kind="select" label="Funding type" name="fundingType" value={form.fundingType} onChange={(e) => set("fundingType", e.target.value)} required error={errors.fundingType}><option value="">Select an option</option><option>Support at Home</option><option>Private funding</option><option>Other</option><option>Not sure</option></FormField>
-          <FormField label="Preferred language" name="preferredLanguage" value={form.preferredLanguage} onChange={(e) => set("preferredLanguage", e.target.value)} required error={errors.preferredLanguage} placeholder="e.g. English, Mandarin" />
-          <FormField kind="select" label="Preferred contact method" name="preferredContactMethod" value={form.preferredContactMethod} onChange={(e) => set("preferredContactMethod", e.target.value)} required error={errors.preferredContactMethod}><option value="">Select an option</option><option>Phone call</option><option>Email</option><option>SMS</option></FormField>
-          <FormField label="Best time to contact" name="bestTimeToContact" value={form.bestTimeToContact} onChange={(e) => set("bestTimeToContact", e.target.value)} required error={errors.bestTimeToContact} placeholder="e.g. Weekday mornings" />
+          <FormField kind="select" label="Who is the enquiry for? (optional)" name="enquiryFor" value={form.enquiryFor} onChange={(e) => set("enquiryFor", e.target.value)}><option value="">Select an option</option><option>Myself</option><option>A family member</option><option>Someone I care for</option><option>Other</option></FormField>
+          <FormField kind="select" label="Funding type (if known)" name="fundingType" value={form.fundingType} onChange={(e) => set("fundingType", e.target.value)}><option value="">Select an option</option><option>Support at Home</option><option>Private funding</option><option>Other</option><option>Not sure</option></FormField>
+          <FormField label="Preferred language (optional)" name="preferredLanguage" value={form.preferredLanguage} onChange={(e) => set("preferredLanguage", e.target.value)} placeholder="e.g. English, Mandarin" />
+          <FormField kind="select" label="Preferred contact method (optional)" name="preferredContactMethod" value={form.preferredContactMethod} onChange={(e) => set("preferredContactMethod", e.target.value)}><option value="">Select an option</option><option>Phone call</option><option>Email</option><option>SMS</option></FormField>
+          <FormField label="Best time to contact (optional)" name="bestTimeToContact" value={form.bestTimeToContact} onChange={(e) => set("bestTimeToContact", e.target.value)} placeholder="e.g. Weekday mornings" />
         </div>
         <div className="support-options">
           <label id="support-options-label">Type of Support Needed <span aria-hidden="true">*</span></label>

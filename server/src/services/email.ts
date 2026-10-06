@@ -2,14 +2,20 @@ import type { LeadRecord } from "@love-at-home/shared";
 
 export interface EmailService { sendLeadNotification(lead: LeadRecord): Promise<void> }
 
+export class LeadNotificationUnavailableError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "LeadNotificationUnavailableError";
+  }
+}
+
 export const emailService: EmailService = {
   async sendLeadNotification(lead) {
     if (!process.env.LEAD_NOTIFICATION_EMAIL || !process.env.EMAIL_FROM || !process.env.EMAIL_PROVIDER_API_KEY) {
-      console.info(`[scaffold] Email notification skipped for ${lead.leadId}: provider settings are not configured.`);
-      return;
+      throw new LeadNotificationUnavailableError("Email notifications are not configured.");
     }
     // TODO: Connect the approved email provider using the structured message below.
-    console.info(`[scaffold] Email integration is configured but not connected for ${lead.leadId}.`);
+    throw new LeadNotificationUnavailableError(`Email notification is not implemented for ${lead.leadId}.`);
   },
 };
 
@@ -23,4 +29,3 @@ export function buildLeadNotification(lead: LeadRecord) {
     ].join("\n"),
   };
 }
-

@@ -5,7 +5,7 @@ export interface ValidationResult { valid: boolean; errors: Record<string, strin
 export function validateEnquiry(value: unknown): ValidationResult {
   if (!value || typeof value !== "object") return { valid: false, errors: { form: "Invalid enquiry payload." } };
   const input = value as Record<string, unknown>;
-  const requiredStrings = ["name", "phone", "suburbPostcode", "enquiryFor", "fundingType", "preferredLanguage", "preferredContactMethod", "bestTimeToContact"] as const;
+  const requiredStrings = ["name", "phone", "suburbPostcode"] as const;
   const errors: Record<string, string> = {};
   for (const field of requiredStrings) if (typeof input[field] !== "string" || !input[field].trim()) errors[field] = "This field is required.";
   if (input.email && (typeof input.email !== "string" || !/^\S+@\S+\.\S+$/.test(input.email))) errors.email = "A valid email address is required.";
@@ -17,4 +17,3 @@ export function validateEnquiry(value: unknown): ValidationResult {
     name: String(input.name).trim(), phone: String(input.phone).trim(), email: String(input.email || "").trim(), suburbPostcode: String(input.suburbPostcode).trim(), enquiryFor: String(input.enquiryFor).trim(), fundingType: String(input.fundingType).trim(), preferredLanguage: String(input.preferredLanguage).trim(), preferredContactMethod: String(input.preferredContactMethod).trim(), bestTimeToContact: String(input.bestTimeToContact).trim(), serviceInterests: input.serviceInterests as string[], questions: String(input.questions || "").trim(),
   } };
 }
-
