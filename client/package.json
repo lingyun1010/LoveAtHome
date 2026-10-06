@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:pages": "tsc -b && vite build --mode pages",
+    "preview": "vite preview",
     "typecheck": "tsc -b --pretty false"
   },
   "dependencies": {
@@ -21,4 +23,3 @@
     "typescript": "^5.9.3"
   }
 }
-

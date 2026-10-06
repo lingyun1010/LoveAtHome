@@ -7,6 +7,8 @@
   "scripts": {
     "dev": "concurrently -n client,server -c magenta,cyan \"npm run dev -w client\" \"npm run dev -w server\"",
     "build": "npm run build -w shared && npm run build -w client && npm run build -w server",
+    "build:pages": "npm run build -w shared && npm run build:pages -w client",
+    "preview": "npm run preview -w client",
     "typecheck": "npm run typecheck -w shared && npm run typecheck -w client && npm run typecheck -w server",
     "start": "npm run start -w server"
   },
@@ -18,4 +20,3 @@
     "node": ">=20"
   }
 }
-

@@ -13,7 +13,7 @@ export function Header() {
   return <header className="site-header">
     <div className="container header-inner">
       <a className="brand" href="#top" aria-label="Love At Home home">
-        <span className="brand-lockup" aria-hidden="true"><img src="/brand-concept-a.png" alt="" /></span>
+        <span className="brand-lockup" aria-hidden="true"><img src={`${import.meta.env.BASE_URL}brand-concept-a.png`} alt="" /></span>
       </a>
       <button className="menu-toggle" type="button" aria-expanded={open} aria-controls="site-navigation" onClick={() => setOpen(!open)}>
         <span className="sr-only">{open ? "Close" : "Open"} menu</span><span /><span /><span />

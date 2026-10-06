@@ -20,6 +20,13 @@ npm run dev
 
 Open `http://localhost:5173`. Vite proxies `/api` requests to the Express server at `http://localhost:3001`.
 
+To preview a completed frontend build locally:
+
+```bash
+npm run build
+npm run preview
+```
+
 ## Environment variables
 
 Copy `.env.example` to `.env` and populate values only when integrations are ready:
@@ -74,6 +81,10 @@ The homepage content is separated from component logic where practical so approv
 
 The intended production path is GitHub → Hostinger Managed Node.js Hosting → the Love At Home domain. Hostinger is hosting infrastructure only; this codebase does not use Hostinger Website Builder. Production hosting has not been configured or deployed.
 
+## GitHub Pages client preview
+
+`npm run build:pages` creates a static client-only review build at `client/dist` with the repository base path `/LoveAtHome/`. This build adds `noindex,nofollow` and changes the enquiry form to a clearly labelled preview response without making an API request. The workflow in `.github/workflows/deploy-pages.yml` deploys only this directory; the Express backend and backend environment variables are not included.
+
 ## Still required
 
 - Approved Love At Home photography
@@ -86,4 +97,3 @@ The intended production path is GitHub → Hostinger Managed Node.js Hosting →
 - Selected email provider and notification implementation
 - Production Open Graph image, canonical URL, robots and sitemap domain
 - Future bilingual translations and internationalisation wiring
-

@@ -8,6 +8,7 @@ type FormState = EnquiryInput;
 const initial: FormState = { name: "", phone: "", email: "", suburbPostcode: "", enquiryFor: "", fundingType: "", preferredLanguage: "", preferredContactMethod: "", bestTimeToContact: "", serviceInterests: [], questions: "" };
 
 export function EnquiryForm() {
+  const isPagesPreview = import.meta.env.MODE === "pages";
   const [form, setForm] = useState(initial);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
@@ -36,6 +37,11 @@ export function EnquiryForm() {
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (!validate()) { setStatus("error"); return; }
+    if (isPagesPreview) {
+      setErrors({});
+      setStatus("success");
+      return;
+    }
     setStatus("sending");
     try {
       const response = await fetch("/api/enquiries", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
@@ -81,7 +87,7 @@ export function EnquiryForm() {
           {errors.serviceInterests && <span className="field-error" id="support-options-error" role="alert">{errors.serviceInterests}</span>}
         </div>
         <FormField kind="textarea" label="What questions do you have?" name="questions" value={form.questions} onChange={(e) => set("questions", e.target.value)} rows={5} placeholder="Tell us what you would like to ask or understand." hint="Please do not include detailed medical or sensitive personal information in this initial enquiry." />
-        {status === "success" && <div className="form-status form-status--success" role="status"><strong>Thank you — your enquiry has been received.</strong><span>A team member will follow up using your preferred contact method.</span></div>}
+        {status === "success" && <div className="form-status form-status--success" role="status">{isPagesPreview ? <><strong>Preview only — no enquiry was submitted.</strong><span>Thanks — this preview does not submit enquiries yet. The live website will connect this form to the Love At Home enquiry workflow.</span></> : <><strong>Thank you — your enquiry has been received.</strong><span>A team member will follow up using your preferred contact method.</span></>}</div>}
         {status === "error" && <div className="form-status form-status--error" role="alert"><strong>We couldn't submit the form yet.</strong><span>Please review the highlighted fields or try again.</span></div>}
         <Button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Submit enquiry"}</Button>
       </form>
