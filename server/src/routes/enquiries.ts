@@ -19,6 +19,8 @@ export function createEnquiriesRouter(dependencies: EnquiryDependencies = { shee
     const lead: LeadRecord = { ...result.data, leadId: `LAH-${now.getUTCFullYear()}-${randomUUID().slice(0, 8).toUpperCase()}`, dateReceived: now.toISOString(), leadSource: "Website", assignedOwner: "Unassigned", status: "New", nextFollowUpDate: "", notes: "", outcome: "" };
     try {
       await dependencies.sheets.appendLead(lead);
+      // The row is the durable source of truth at this point. If notification fails,
+      // retain it and return an error that directs the user to contact the team rather than silently reporting success.
       await dependencies.email.sendLeadNotification(lead);
       res.status(201).json({ success: true, leadId: lead.leadId, submittedAt: lead.dateReceived });
     } catch (error) {

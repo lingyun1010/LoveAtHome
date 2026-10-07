@@ -15,10 +15,10 @@ app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
 app.use("/api/enquiries", enquiriesRouter);
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
-const clientDist = path.resolve(dirname, "../../client/dist");
+const publicDir = path.join(dirname, "public");
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(clientDist));
-  app.get("*", (_req, res) => res.sendFile(path.join(clientDist, "index.html")));
+  app.use(express.static(publicDir));
+  app.get("*", (_req, res) => res.sendFile(path.join(publicDir, "index.html")));
 }
 
 app.use((error: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
@@ -27,4 +27,3 @@ app.use((error: Error, _req: express.Request, res: express.Response, _next: expr
 });
 
 app.listen(port, () => console.log(`Love At Home server running at http://localhost:${port}`));
-

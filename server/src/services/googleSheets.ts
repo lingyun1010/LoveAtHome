@@ -37,11 +37,14 @@ export const googleSheetsService: GoogleSheetsService = {
         message: error instanceof Error ? error.message : String(error),
         name: error instanceof Error ? error.name : undefined,
       });
-
-      throw error;
+      throw toLeadPersistenceError(error);
     }
   },
 };
+
+export function toLeadPersistenceError(error: unknown): LeadPersistenceUnavailableError {
+  return new LeadPersistenceUnavailableError("Google Sheets append failed.", { cause: error });
+}
 
 export function toGoogleSheetRow(lead: LeadRecord): string[] {
   return [lead.leadId, lead.dateReceived, lead.name, lead.phone, lead.email || "", lead.suburbPostcode, lead.serviceInterests.join(", "), lead.fundingType, lead.preferredLanguage, lead.enquiryFor, lead.preferredContactMethod, lead.bestTimeToContact, lead.questions, lead.leadSource, lead.assignedOwner, lead.status, lead.nextFollowUpDate, lead.notes, lead.outcome];

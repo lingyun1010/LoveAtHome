@@ -5,7 +5,7 @@ import request from "supertest";
 import type { LeadRecord } from "@love-at-home/shared";
 import { createEnquiriesRouter } from "./routes/enquiries.js";
 import { LeadNotificationUnavailableError } from "./services/email.js";
-import { LeadPersistenceUnavailableError, toGoogleSheetRow } from "./services/googleSheets.js";
+import { LeadPersistenceUnavailableError, toGoogleSheetRow, toLeadPersistenceError } from "./services/googleSheets.js";
 
 const payload = {
   name: "Test Person",
@@ -46,6 +46,14 @@ test("maps a lead to the exact 19-column sheet order", () => {
     "Sydney 2000", "Personal Care, Transport", "Private", "English", "Myself", "Phone", "Morning",
     "What is available?", "Website", "Unassigned", "New", "", "", "",
   ]);
+});
+
+test("wraps raw Google API failures for the route's 503 path", () => {
+  const apiError = new Error("permission denied");
+  const wrapped = toLeadPersistenceError(apiError);
+  assert.ok(wrapped instanceof LeadPersistenceUnavailableError);
+  assert.equal(wrapped.message, "Google Sheets append failed.");
+  assert.equal(wrapped.cause, apiError);
 });
 
 test("fails and does not send email when Google Sheets fails", async () => {
