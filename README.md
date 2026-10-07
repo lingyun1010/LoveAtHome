@@ -10,7 +10,7 @@ An initial, maintainable website foundation for Love At Home, a Sydney home-care
 
 ## Local development
 
-Requirements: Node.js 20 or newer.
+Requirements: Node.js 22 or newer.
 
 ```bash
 npm install
@@ -91,6 +91,20 @@ Notification delivery state is not stored. If Hostinger accepts an email but the
 ## Future deployment
 
 The intended production path is GitHub → Hostinger Managed Node.js Hosting → the Love At Home domain. Hostinger is hosting infrastructure only; this codebase does not use Hostinger Website Builder. Production hosting has not been configured or deployed.
+
+Use these Hostinger production settings:
+
+| Setting | Value |
+| --- | --- |
+| Node | `22.x` |
+| Root | `./` |
+| Install | `npm ci --include=dev` |
+| Build | `npm run build` |
+| Entry | `server/dist/index.js` |
+| Output directory | Leave blank |
+| Environment | `NODE_ENV=production` |
+
+TypeScript, Vite and the other compilation tools intentionally remain development dependencies because the running server does not need them. A production-mode npm install omits development dependencies by default, so the explicit `--include=dev` is required during the Hostinger build phase. The production-build GitHub Actions workflow uses the same install and root build commands, checks the packaged server and frontend artifacts, and smoke-tests the health endpoint and static homepage without integration credentials.
 
 ## GitHub Pages client preview
 

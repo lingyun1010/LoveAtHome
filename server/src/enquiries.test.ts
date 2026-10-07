@@ -3,6 +3,7 @@ import test from "node:test";
 import express from "express";
 import request from "supertest";
 import type { LeadRecord } from "@love-at-home/shared";
+import { normalizeAustralianPhone } from "@love-at-home/shared";
 import { createEnquiriesRouter } from "./routes/enquiries.js";
 import { LeadNotificationUnavailableError } from "./services/email.js";
 import { hasSameEnquiryContent, IdempotencyConflictError, LeadPersistenceUnavailableError, type PersistLeadResult, toGoogleSheetRow, toLeadPersistenceError } from "./services/googleSheets.js";
@@ -72,6 +73,36 @@ test("rejects a missing or invalid Idempotency-Key", async () => {
   assert.equal((await request(app).post("/api/enquiries").send(payload)).status, 400);
   assert.equal((await request(app).post("/api/enquiries").set("Idempotency-Key", "not-a-uuid").send(payload)).status, 400);
   assert.equal(sheets.appendCount, 0);
+});
+
+test("normalizes common Australian mobile and landline formats", () => {
+  const cases = [
+    ["0412 345 678", "+61412345678"],
+    ["0412345678", "+61412345678"],
+    ["02 9876 5432", "+61298765432"],
+    ["+61 412 345 678", "+61412345678"],
+    ["+61 2 9876 5432", "+61298765432"],
+    ["(02) 9876-5432", "+61298765432"],
+  ];
+  for (const [input, expected] of cases) assert.equal(normalizeAustralianPhone(input), expected);
+});
+
+test("rejects invalid Australian phone values on the server", async () => {
+  const sheets = inMemorySheets();
+  const app = appWith(sheets.persistLead.bind(sheets), async () => undefined);
+  for (const phone of ["call me", "0412 345", "1234567890", "+1 212 555 0123", "((02)) 9876 5432"]) {
+    const response = await post(app, keyOne, { ...payload, phone });
+    assert.equal(response.status, 400);
+    assert.equal(response.body.errors.phone, "Please enter a valid Australian phone number.");
+  }
+  assert.equal(sheets.appendCount, 0);
+});
+
+test("stores a normalized phone number", async () => {
+  const sheets = inMemorySheets();
+  const response = await post(appWith(sheets.persistLead.bind(sheets), async () => undefined), keyOne, { ...payload, phone: "+61 (2) 9876-5432" });
+  assert.equal(response.status, 201);
+  assert.equal(sheets.rows.get(keyOne)?.phone, "+61298765432");
 });
 
 test("first submission appends exactly one row and returns duplicate=false", async () => {
