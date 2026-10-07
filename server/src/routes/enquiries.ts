@@ -7,22 +7,29 @@ import { validateEnquiry } from "../validation/enquiry.js";
 
 interface EnquiryDependencies { sheets: GoogleSheetsService; email: EmailService }
 
+const idempotencyKeyPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 export function createEnquiriesRouter(dependencies: EnquiryDependencies = { sheets: googleSheetsService, email: emailService }) {
   const router = Router();
   router.post("/", async (req, res) => {
+    const submissionId = req.get("Idempotency-Key");
+    if (!submissionId || submissionId.length > 128 || !idempotencyKeyPattern.test(submissionId)) {
+      res.status(400).json({ success: false, errors: { idempotencyKey: "A valid Idempotency-Key header is required." } });
+      return;
+    }
     const result = validateEnquiry(req.body);
     if (!result.valid || !result.data) {
       res.status(400).json({ success: false, errors: result.errors });
       return;
     }
     const now = new Date();
-    const lead: LeadRecord = { ...result.data, leadId: `LAH-${now.getUTCFullYear()}-${randomUUID().slice(0, 8).toUpperCase()}`, dateReceived: now.toISOString(), leadSource: "Website", assignedOwner: "Unassigned", status: "New", nextFollowUpDate: "", notes: "", outcome: "" };
+    const lead: LeadRecord = { ...result.data, leadId: `LAH-${now.getUTCFullYear()}-${randomUUID().slice(0, 8).toUpperCase()}`, submissionId, dateReceived: now.toISOString(), leadSource: "Website", assignedOwner: "Unassigned", status: "New", nextFollowUpDate: "", notes: "", outcome: "" };
     try {
-      await dependencies.sheets.appendLead(lead);
+      const persisted = await dependencies.sheets.persistLead(lead);
       // The row is the durable source of truth at this point. If notification fails,
       // retain it and return an error that directs the user to contact the team rather than silently reporting success.
-      await dependencies.email.sendLeadNotification(lead);
-      res.status(201).json({ success: true, leadId: lead.leadId, submittedAt: lead.dateReceived });
+      await dependencies.email.sendLeadNotification(persisted.lead);
+      res.status(201).json({ success: true, leadId: persisted.lead.leadId, submittedAt: persisted.lead.dateReceived, duplicate: persisted.duplicate });
     } catch (error) {
       const category = error instanceof LeadPersistenceUnavailableError ? "google_sheets" : error instanceof LeadNotificationUnavailableError ? "hostinger_mail" : "unexpected";
       console.error("Enquiry processing failed", { leadId: lead.leadId, category });

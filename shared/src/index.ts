@@ -30,6 +30,7 @@ export interface EnquiryInput {
 
 export interface LeadRecord extends EnquiryInput {
   leadId: string;
+  submissionId: string;
   dateReceived: string;
   leadSource: "Website";
   assignedOwner: "Unassigned";
@@ -38,4 +39,3 @@ export interface LeadRecord extends EnquiryInput {
   notes: string;
   outcome: string;
 }
-

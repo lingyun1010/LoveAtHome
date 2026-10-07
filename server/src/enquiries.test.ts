@@ -5,93 +5,137 @@ import request from "supertest";
 import type { LeadRecord } from "@love-at-home/shared";
 import { createEnquiriesRouter } from "./routes/enquiries.js";
 import { LeadNotificationUnavailableError } from "./services/email.js";
-import { LeadPersistenceUnavailableError, toGoogleSheetRow, toLeadPersistenceError } from "./services/googleSheets.js";
+import { LeadPersistenceUnavailableError, type PersistLeadResult, toGoogleSheetRow, toLeadPersistenceError } from "./services/googleSheets.js";
 
+const keyOne = "00000000-0000-4000-8000-000000000001";
+const keyTwo = "00000000-0000-4000-8000-000000000002";
 const payload = {
-  name: "Test Person",
-  phone: "0400000000",
-  email: "test@example.com",
-  suburbPostcode: "Sydney 2000",
-  enquiryFor: "Myself",
-  fundingType: "Private",
-  preferredLanguage: "English",
-  preferredContactMethod: "Phone",
-  bestTimeToContact: "Morning",
-  serviceInterests: ["Personal Care", "Transport"],
-  questions: "What is available?",
+  name: "Test Person", phone: "0400000000", email: "test@example.com", suburbPostcode: "Sydney 2000",
+  enquiryFor: "Myself", fundingType: "Private", preferredLanguage: "English", preferredContactMethod: "Phone",
+  bestTimeToContact: "Morning", serviceInterests: ["Personal Care", "Transport"], questions: "What is available?",
 };
 
 const lead: LeadRecord = {
-  ...payload,
-  leadId: "LAH-2026-ABC12345",
-  dateReceived: "2026-10-07T00:00:00.000Z",
-  leadSource: "Website",
-  assignedOwner: "Unassigned",
-  status: "New",
-  nextFollowUpDate: "",
-  notes: "",
-  outcome: "",
+  ...payload, leadId: "LAH-2026-ABC12345", submissionId: keyOne, dateReceived: "2026-10-07T00:00:00.000Z",
+  leadSource: "Website", assignedOwner: "Unassigned", status: "New", nextFollowUpDate: "", notes: "", outcome: "",
 };
 
-function appWith(sheets: (lead: LeadRecord) => Promise<void>, email: (lead: LeadRecord) => Promise<void>) {
+function appWith(persistLead: (lead: LeadRecord) => Promise<PersistLeadResult>, email: (lead: LeadRecord) => Promise<void>) {
   const app = express();
   app.use(express.json());
-  app.use("/api/enquiries", createEnquiriesRouter({ sheets: { appendLead: sheets }, email: { sendLeadNotification: email } }));
+  app.use("/api/enquiries", createEnquiriesRouter({ sheets: { persistLead }, email: { sendLeadNotification: email } }));
   return app;
 }
 
-test("maps a lead to the exact 19-column sheet order", () => {
+function inMemorySheets() {
+  const rows = new Map<string, LeadRecord>();
+  let appendCount = 0;
+  return {
+    rows,
+    get appendCount() { return appendCount; },
+    async persistLead(candidate: LeadRecord): Promise<PersistLeadResult> {
+      const existing = rows.get(candidate.submissionId);
+      if (existing) return { lead: existing, duplicate: true };
+      rows.set(candidate.submissionId, candidate);
+      appendCount += 1;
+      return { lead: candidate, duplicate: false };
+    },
+  };
+}
+
+function post(app: express.Express, key = keyOne) {
+  return request(app).post("/api/enquiries").set("Idempotency-Key", key).send(payload);
+}
+
+test("maps a lead to the exact 20-column A:T sheet order", () => {
   assert.deepEqual(toGoogleSheetRow(lead), [
     "LAH-2026-ABC12345", "2026-10-07T00:00:00.000Z", "Test Person", "0400000000", "test@example.com",
     "Sydney 2000", "Personal Care, Transport", "Private", "English", "Myself", "Phone", "Morning",
-    "What is available?", "Website", "Unassigned", "New", "", "", "",
+    "What is available?", "Website", "Unassigned", "New", "", "", "", keyOne,
   ]);
 });
 
-test("wraps raw Google API failures for the route's 503 path", () => {
+test("wraps raw Google API failures as LeadPersistenceUnavailableError", () => {
   const apiError = new Error("permission denied");
   const wrapped = toLeadPersistenceError(apiError);
   assert.ok(wrapped instanceof LeadPersistenceUnavailableError);
-  assert.equal(wrapped.message, "Google Sheets append failed.");
+  assert.equal(wrapped.message, "Google Sheets persistence failed.");
   assert.equal(wrapped.cause, apiError);
 });
 
-test("fails and does not send email when Google Sheets fails", async () => {
+test("rejects a missing or invalid Idempotency-Key", async () => {
+  const sheets = inMemorySheets();
+  const app = appWith(sheets.persistLead.bind(sheets), async () => undefined);
+  assert.equal((await request(app).post("/api/enquiries").send(payload)).status, 400);
+  assert.equal((await request(app).post("/api/enquiries").set("Idempotency-Key", "not-a-uuid").send(payload)).status, 400);
+  assert.equal(sheets.appendCount, 0);
+});
+
+test("first submission appends exactly one row and returns duplicate=false", async () => {
+  const sheets = inMemorySheets();
+  const response = await post(appWith(sheets.persistLead.bind(sheets), async () => undefined));
+  assert.equal(response.status, 201);
+  assert.equal(response.body.duplicate, false);
+  assert.equal(sheets.appendCount, 1);
+});
+
+test("retry with the same key does not append and reuses the Lead ID", async () => {
+  const sheets = inMemorySheets();
+  const app = appWith(sheets.persistLead.bind(sheets), async () => undefined);
+  const first = await post(app);
+  const retry = await post(app);
+  assert.equal(retry.status, 201);
+  assert.equal(retry.body.duplicate, true);
+  assert.equal(retry.body.leadId, first.body.leadId);
+  assert.equal(retry.body.submittedAt, first.body.submittedAt);
+  assert.equal(sheets.appendCount, 1);
+});
+
+test("Sheet success plus email failure retries email without another row", async () => {
+  const sheets = inMemorySheets();
+  const emailedLeadIds: string[] = [];
+  let emailAttempts = 0;
+  const app = appWith(sheets.persistLead.bind(sheets), async (savedLead) => {
+    emailAttempts += 1;
+    emailedLeadIds.push(savedLead.leadId);
+    if (emailAttempts === 1) throw new LeadNotificationUnavailableError("failed");
+  });
+  const originalError = console.error;
+  console.error = () => undefined;
+  try {
+    const first = await post(app);
+    const retry = await post(app);
+    assert.equal(first.status, 503);
+    assert.equal(retry.status, 201);
+    assert.equal(retry.body.duplicate, true);
+    assert.equal(sheets.appendCount, 1);
+    assert.equal(emailAttempts, 2);
+    assert.equal(new Set(emailedLeadIds).size, 1);
+    assert.equal(retry.body.leadId, emailedLeadIds[0]);
+  } finally { console.error = originalError; }
+});
+
+test("different idempotency keys create different leads", async () => {
+  const sheets = inMemorySheets();
+  const app = appWith(sheets.persistLead.bind(sheets), async () => undefined);
+  const first = await post(app, keyOne);
+  const second = await post(app, keyTwo);
+  assert.equal(first.status, 201);
+  assert.equal(second.status, 201);
+  assert.notEqual(second.body.leadId, first.body.leadId);
+  assert.equal(sheets.appendCount, 2);
+});
+
+test("does not send email when Google Sheets fails", async () => {
   let emailCalled = false;
   const originalError = console.error;
   console.error = () => undefined;
   try {
-    const response = await request(appWith(
+    const response = await post(appWith(
       async () => { throw new LeadPersistenceUnavailableError("failed"); },
       async () => { emailCalled = true; },
-    )).post("/api/enquiries").send(payload);
+    ));
     assert.equal(response.status, 503);
-    assert.equal(response.body.success, false);
     assert.equal(emailCalled, false);
   } finally { console.error = originalError; }
-});
-
-test("fails when email fails after a successful sheet append", async () => {
-  const originalError = console.error;
-  console.error = () => undefined;
-  try {
-    const response = await request(appWith(
-      async () => undefined,
-      async () => { throw new LeadNotificationUnavailableError("failed"); },
-    )).post("/api/enquiries").send(payload);
-    assert.equal(response.status, 503);
-    assert.equal(response.body.success, false);
-  } finally { console.error = originalError; }
-});
-
-test("returns 201 only after both integrations succeed", async () => {
-  const calls: string[] = [];
-  const response = await request(appWith(
-    async () => { calls.push("sheet"); },
-    async () => { calls.push("email"); },
-  )).post("/api/enquiries").send(payload);
-  assert.equal(response.status, 201);
-  assert.equal(response.body.success, true);
-  assert.match(response.body.leadId, /^LAH-\d{4}-[A-F0-9]{8}$/);
-  assert.deepEqual(calls, ["sheet", "email"]);
 });
