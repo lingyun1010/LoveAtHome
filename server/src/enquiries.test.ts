@@ -189,3 +189,24 @@ test("does not send email when Google Sheets fails", async () => {
     assert.equal(emailCalled, false);
   } finally { console.error = originalError; }
 });
+
+test("includes the underlying persistence error only in development", async () => {
+  const previousNodeEnv = process.env.NODE_ENV;
+  const failure = new LeadPersistenceUnavailableError("Google Sheets row append failed.", { cause: new Error("permission denied") });
+  const app = appWith(async () => { throw failure; }, async () => undefined);
+  const originalError = console.error;
+  console.error = () => undefined;
+  try {
+    process.env.NODE_ENV = "development";
+    const developmentResponse = await post(app);
+    assert.equal(developmentResponse.body.debug, "permission denied");
+
+    process.env.NODE_ENV = "production";
+    const productionResponse = await post(app, keyTwo);
+    assert.equal("debug" in productionResponse.body, false);
+  } finally {
+    console.error = originalError;
+    if (previousNodeEnv === undefined) delete process.env.NODE_ENV;
+    else process.env.NODE_ENV = previousNodeEnv;
+  }
+});

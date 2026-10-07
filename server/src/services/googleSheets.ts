@@ -11,6 +11,32 @@ export class LeadPersistenceUnavailableError extends Error {
   }
 }
 
+type GoogleSheetsStage = "environment validation" | "authentication" | "spreadsheet lookup" | "worksheet/range lookup" | "row append";
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+function logStageFailure(stage: GoogleSheetsStage, error: unknown) {
+  console.error("Google Sheets operation failed", {
+    stage,
+    message: errorMessage(error),
+    name: error instanceof Error ? error.name : undefined,
+  });
+}
+
+async function runGoogleSheetsStage<T>(stage: GoogleSheetsStage, operation: () => Promise<T>): Promise<T> {
+  console.info("Google Sheets operation started", { stage });
+  try {
+    const result = await operation();
+    console.info("Google Sheets operation completed", { stage });
+    return result;
+  } catch (error) {
+    logStageFailure(stage, error);
+    throw new LeadPersistenceUnavailableError(`Google Sheets ${stage} failed.`, { cause: error });
+  }
+}
+
 export class IdempotencyConflictError extends Error {
   constructor() {
     super("The Idempotency-Key has already been used with different enquiry content.");
@@ -21,10 +47,25 @@ export class IdempotencyConflictError extends Error {
 function requireGoogleConfig() {
   const spreadsheetId = process.env.GOOGLE_SHEET_ID;
   const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
-  const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+  const configuredPrivateKey = process.env.GOOGLE_PRIVATE_KEY;
+  const privateKey = configuredPrivateKey?.replace(/\\n/g, "\n");
   const sheetName = process.env.GOOGLE_SHEET_NAME || "Leads";
-  if (!spreadsheetId || !clientEmail || !privateKey) throw new LeadPersistenceUnavailableError("Google Sheets is not configured.");
-  return { spreadsheetId, clientEmail, privateKey, sheetName };
+  const missing: string[] = [];
+  if (!spreadsheetId) missing.push("GOOGLE_SHEET_ID");
+  if (!clientEmail) missing.push("GOOGLE_SERVICE_ACCOUNT_EMAIL");
+  if (!privateKey) missing.push("GOOGLE_PRIVATE_KEY");
+  console.info("Google Sheets environment validation", {
+    configured: missing.length === 0,
+    missing,
+    privateKeyHasEscapedNewlines: configuredPrivateKey?.includes("\\n") ?? false,
+    privateKeyHasActualNewlines: privateKey?.includes("\n") ?? false,
+  });
+  if (missing.length) {
+    const error = new Error(`Missing required environment variables: ${missing.join(", ")}.`);
+    logStageFailure("environment validation", error);
+    throw new LeadPersistenceUnavailableError("Google Sheets is not configured.", { cause: error });
+  }
+  return { spreadsheetId: spreadsheetId!, clientEmail: clientEmail!, privateKey: privateKey!, sheetName };
 }
 
 const submissionLocks = new Map<string, Promise<void>>();
@@ -49,9 +90,20 @@ export const googleSheetsService: GoogleSheetsService = {
       const config = requireGoogleConfig();
       try {
         const auth = new google.auth.JWT({ email: config.clientEmail, key: config.privateKey, scopes: ["https://www.googleapis.com/auth/spreadsheets"] });
+        await runGoogleSheetsStage("authentication", () => auth.authorize());
         const sheets = google.sheets({ version: "v4", auth });
+        const spreadsheet = await runGoogleSheetsStage("spreadsheet lookup", () => sheets.spreadsheets.get({
+          spreadsheetId: config.spreadsheetId,
+          fields: "spreadsheetId,sheets.properties.title",
+        }));
+        const worksheetExists = spreadsheet.data.sheets?.some(({ properties }) => properties?.title === config.sheetName);
+        if (!worksheetExists) {
+          const error = new Error(`Worksheet "${config.sheetName}" was not found.`);
+          logStageFailure("worksheet/range lookup", error);
+          throw new LeadPersistenceUnavailableError("Google Sheets worksheet/range lookup failed.", { cause: error });
+        }
         const range = `'${config.sheetName.replace(/'/g, "''")}'!A:T`;
-        const existingRows = await sheets.spreadsheets.values.get({ spreadsheetId: config.spreadsheetId, range });
+        const existingRows = await runGoogleSheetsStage("worksheet/range lookup", () => sheets.spreadsheets.values.get({ spreadsheetId: config.spreadsheetId, range }));
         const existingRow = existingRows.data.values?.find((row) => row[19] === lead.submissionId && row[0] && row[1]);
         if (existingRow) {
           const existingLead = fromGoogleSheetRow(existingRow);
@@ -59,20 +111,17 @@ export const googleSheetsService: GoogleSheetsService = {
           return { lead: existingLead, duplicate: true };
         }
 
-        await sheets.spreadsheets.values.append({
+        await runGoogleSheetsStage("row append", () => sheets.spreadsheets.values.append({
           spreadsheetId: config.spreadsheetId,
           range,
           valueInputOption: "RAW",
           insertDataOption: "INSERT_ROWS",
           requestBody: { values: [toGoogleSheetRow(lead)] },
-        });
+        }));
         return { lead, duplicate: false };
       } catch (error) {
-        if (error instanceof IdempotencyConflictError) throw error;
-        console.error("Google Sheets persistence failed", {
-          message: error instanceof Error ? error.message : String(error),
-          name: error instanceof Error ? error.name : undefined,
-        });
+        if (error instanceof IdempotencyConflictError || error instanceof LeadPersistenceUnavailableError) throw error;
+        console.error("Google Sheets persistence failed outside a tracked operation", { message: errorMessage(error), name: error instanceof Error ? error.name : undefined });
         throw toLeadPersistenceError(error);
       }
     });
@@ -81,6 +130,11 @@ export const googleSheetsService: GoogleSheetsService = {
 
 export function toLeadPersistenceError(error: unknown): LeadPersistenceUnavailableError {
   return new LeadPersistenceUnavailableError("Google Sheets persistence failed.", { cause: error });
+}
+
+export function underlyingPersistenceErrorMessage(error: unknown): string {
+  if (error instanceof LeadPersistenceUnavailableError && error.cause !== undefined) return errorMessage(error.cause);
+  return errorMessage(error);
 }
 
 export function toGoogleSheetRow(lead: LeadRecord): string[] {

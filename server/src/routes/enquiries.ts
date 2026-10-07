@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { Router } from "express";
 import type { LeadRecord } from "@love-at-home/shared";
 import { emailService, LeadNotificationUnavailableError, type EmailService } from "../services/email.js";
-import { googleSheetsService, IdempotencyConflictError, LeadPersistenceUnavailableError, type GoogleSheetsService } from "../services/googleSheets.js";
+import { googleSheetsService, IdempotencyConflictError, LeadPersistenceUnavailableError, underlyingPersistenceErrorMessage, type GoogleSheetsService } from "../services/googleSheets.js";
 import { validateEnquiry } from "../validation/enquiry.js";
 
 interface EnquiryDependencies { sheets: GoogleSheetsService; email: EmailService }
@@ -36,6 +36,7 @@ export function createEnquiriesRouter(dependencies: EnquiryDependencies = { shee
       res.status(category === "idempotency_conflict" ? 409 : category === "unexpected" ? 500 : 503).json({
         success: false,
         message: category === "idempotency_conflict" ? "This submission has changed since it was first received. Please start a new enquiry." : category === "google_sheets" ? "We could not save your enquiry. Please contact Love At Home directly." : category === "hostinger_mail" ? "Your enquiry could not be fully processed. Please contact Love At Home directly." : "We could not process the enquiry. Please try again.",
+        ...(process.env.NODE_ENV === "development" ? { debug: underlyingPersistenceErrorMessage(error) } : {}),
       });
     }
   });
