@@ -14,6 +14,6 @@ export function validateEnquiry(value: unknown): ValidationResult {
   for (const [key, item] of Object.entries(input)) if (typeof item === "string" && item.length > 2000) errors[key] = "This field is too long.";
   if (Object.keys(errors).length) return { valid: false, errors };
   return { valid: true, errors: {}, data: {
-    name: String(input.name).trim(), phone: String(input.phone).trim(), email: String(input.email || "").trim(), suburbPostcode: String(input.suburbPostcode).trim(), enquiryFor: String(input.enquiryFor).trim(), fundingType: String(input.fundingType).trim(), preferredLanguage: String(input.preferredLanguage).trim(), preferredContactMethod: String(input.preferredContactMethod).trim(), bestTimeToContact: String(input.bestTimeToContact).trim(), serviceInterests: input.serviceInterests as string[], questions: String(input.questions || "").trim(),
+    name: String(input.name).trim(), phone: String(input.phone).trim(), email: String(input.email || "").trim(), suburbPostcode: String(input.suburbPostcode).trim(), enquiryFor: String(input.enquiryFor || "").trim(), fundingType: String(input.fundingType || "").trim(), preferredLanguage: String(input.preferredLanguage || "").trim(), preferredContactMethod: String(input.preferredContactMethod || "").trim(), bestTimeToContact: String(input.bestTimeToContact || "").trim(), serviceInterests: input.serviceInterests as string[], questions: String(input.questions || "").trim(),
   } };
 }

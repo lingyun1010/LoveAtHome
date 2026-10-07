@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { serviceOptions, type EnquiryInput } from "@love-at-home/shared";
 import { Button } from "../components/Button";
 import { FormField } from "../components/FormField";
@@ -11,7 +11,8 @@ export function EnquiryForm() {
   const isPagesPreview = import.meta.env.MODE === "pages";
   const [form, setForm] = useState(initial);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error" | "conflict">("idle");
+  const submissionId = useRef<string | null>(null);
   const set = (name: keyof FormState, value: string) => setForm((current) => ({ ...current, [name]: value }));
 
   function toggleService(value: string) {
@@ -31,16 +32,24 @@ export function EnquiryForm() {
 
   async function submit(event: FormEvent) {
     event.preventDefault();
+    if (status === "sending") return;
     if (!validate()) { setStatus("error"); return; }
     if (isPagesPreview) {
       setErrors({});
       setStatus("success");
       return;
     }
+    submissionId.current ??= crypto.randomUUID();
     setStatus("sending");
     try {
-      const response = await fetch("/api/enquiries", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
+      const response = await fetch("/api/enquiries", { method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": submissionId.current }, body: JSON.stringify(form) });
+      if (response.status === 409) {
+        submissionId.current = null;
+        setStatus("conflict");
+        return;
+      }
       if (!response.ok) throw new Error("Submission failed");
+      submissionId.current = null;
       setForm(initial); setErrors({}); setStatus("success");
     } catch { setStatus("error"); }
   }
@@ -83,6 +92,7 @@ export function EnquiryForm() {
         </div>
         <FormField kind="textarea" label="What questions do you have?" name="questions" value={form.questions} onChange={(e) => set("questions", e.target.value)} rows={5} placeholder="Tell us what you would like to ask or understand." hint="Please do not include detailed medical or sensitive personal information in this initial enquiry." />
         {status === "success" && <div className="form-status form-status--success" role="status">{isPagesPreview ? <><strong>Preview only — no enquiry was submitted.</strong><span>Thanks — this preview does not submit enquiries yet. The live website will connect this form to the Love At Home enquiry workflow.</span></> : <><strong>Thank you — your enquiry has been received.</strong><span>A team member will follow up using your preferred contact method.</span></>}</div>}
+        {status === "conflict" && <div className="form-status form-status--error" role="alert"><strong>Your enquiry changed after a previous submission attempt.</strong><span>Please submit again to send the updated details.</span></div>}
         {status === "error" && <div className="form-status form-status--error" role="alert"><strong>We couldn't submit the form yet.</strong><span>Please review the highlighted fields or try again.</span></div>}
         <Button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Submit enquiry"}</Button>
       </form>

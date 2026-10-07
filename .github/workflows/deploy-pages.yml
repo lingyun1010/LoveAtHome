@@ -41,6 +41,9 @@ jobs:
       - name: Typecheck
         run: npm run typecheck -w client && npm run typecheck -w server
 
+      - name: Test backend
+        run: npm test -w server
+
       - name: Build static frontend preview
         run: npm run build:pages
 
