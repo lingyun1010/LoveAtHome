@@ -48,7 +48,6 @@ jobs:
       - name: Smoke-test production application
         shell: bash
         env:
-          NODE_ENV: production
           PORT: 4173
         run: |
           node server/dist/index.js > production-smoke.log 2>&1 &

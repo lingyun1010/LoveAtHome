@@ -1,4 +1,5 @@
 import path from "node:path";
+import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -16,9 +17,10 @@ app.use("/api/enquiries", enquiriesRouter);
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(dirname, "public");
-if (process.env.NODE_ENV === "production") {
+const publicIndex = path.join(publicDir, "index.html");
+if (existsSync(publicIndex)) {
   app.use(express.static(publicDir));
-  app.get("*", (_req, res) => res.sendFile(path.join(publicDir, "index.html")));
+  app.get("*", (_req, res) => res.sendFile(publicIndex));
 }
 
 app.use((error: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {

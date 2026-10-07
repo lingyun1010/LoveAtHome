@@ -98,13 +98,11 @@ Use these Hostinger production settings:
 | --- | --- |
 | Node | `22.x` |
 | Root | `./` |
-| Install | `npm ci --include=dev` |
-| Build | `npm run build` |
+| Build command | Select `npm run build` from the Hostinger dropdown |
 | Entry | `server/dist/index.js` |
 | Output directory | Leave blank |
-| Environment | `NODE_ENV=production` |
 
-TypeScript, Vite and the other compilation tools intentionally remain development dependencies because the running server does not need them. A production-mode npm install omits development dependencies by default, so the explicit `--include=dev` is required during the Hostinger build phase. The production-build GitHub Actions workflow uses the same install and root build commands, checks the packaged server and frontend artifacts, and smoke-tests the health endpoint and static homepage without integration credentials.
+TypeScript, Vite and the other compilation tools intentionally remain development dependencies because the running server does not need them. Do not configure `NODE_ENV=production` as a required Hostinger variable: Hostinger can omit development dependencies during its managed install when that variable is present, leaving the selected build command without `tsc` or Vite. The built server detects and serves its packaged frontend from `server/dist/public` without relying on `NODE_ENV`. The production-build GitHub Actions workflow checks the packaged server and frontend artifacts and smoke-tests the health endpoint and static homepage without integration credentials.
 
 ## GitHub Pages client preview
 
