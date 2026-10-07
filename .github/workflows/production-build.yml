@@ -1,0 +1,78 @@
+name: Verify production build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install build dependencies
+        run: npm ci --include=dev
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test backend
+        run: npm test -w server
+
+      - name: Build production application
+        run: npm run build
+
+      - name: Verify production artifacts
+        shell: bash
+        run: |
+          test -f server/dist/index.js
+          test -f server/dist/public/index.html
+          test -d server/dist/public/assets
+          find server/dist/public/assets -type f -print -quit | grep -q .
+
+      - name: Smoke-test production application
+        shell: bash
+        env:
+          NODE_ENV: production
+          PORT: 4173
+        run: |
+          node server/dist/index.js > production-smoke.log 2>&1 &
+          server_pid=$!
+          cleanup() {
+            kill "$server_pid" 2>/dev/null || true
+            wait "$server_pid" 2>/dev/null || true
+          }
+          trap cleanup EXIT
+
+          ready=false
+          for attempt in {1..30}; do
+            if curl --silent --fail http://127.0.0.1:$PORT/api/health > health.json; then
+              ready=true
+              break
+            fi
+            if ! kill -0 "$server_pid" 2>/dev/null; then
+              cat production-smoke.log
+              exit 1
+            fi
+            sleep 1
+          done
+
+          if [ "$ready" != true ]; then
+            cat production-smoke.log
+            exit 1
+          fi
+          grep -Eq '^\{"status":"ok"\}$' health.json
+          curl --silent --fail --output homepage.html http://127.0.0.1:$PORT/
+          grep -Eiq '<!doctype html|<html' homepage.html
