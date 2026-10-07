@@ -33,11 +33,12 @@ Copy `.env.example` to `.env` and populate values only when integrations are rea
 
 - `PORT`: Express port; defaults to `3001`
 - `GOOGLE_SHEET_ID`: target lead-tracker spreadsheet
+- `GOOGLE_SHEET_NAME`: target tab; defaults to `Leads`
 - `GOOGLE_SERVICE_ACCOUNT_EMAIL`: Google service account identity
 - `GOOGLE_PRIVATE_KEY`: Google service account private key
+- `HOSTINGER_MAIL_API_KEY`: mailbox-scoped Hostinger Mail API token
+- `HOSTINGER_MAILBOX`: sending mailbox address
 - `LEAD_NOTIFICATION_EMAIL`: enquiry notification recipient
-- `EMAIL_FROM`: approved sender address
-- `EMAIL_PROVIDER_API_KEY`: API key for the future selected email provider
 
 Never commit `.env` or credentials.
 
@@ -49,7 +50,7 @@ npm run build
 NODE_ENV=production npm start
 ```
 
-The production Express process serves `client/dist` and the `/api` routes from one Node.js application.
+The server build copies the Vite output into `server/dist/public`. The production Express process serves that colocated frontend artifact and the `/api` routes from one Node.js application.
 
 ## Architecture
 
@@ -75,7 +76,15 @@ The homepage content is separated from component logic where practical so approv
 
 ## Enquiry flow
 
-`POST /api/enquiries` validates the payload, generates a Lead ID and timestamp, maps the enquiry to the 19-column Google Sheet structure, then calls the Sheets and email service interfaces. Google Sheets persistence is the success boundary: the API does not return `201` unless the lead is persisted. Email is a secondary notification after persistence; a notification failure is logged and reported as `notificationSent: false` without asking the visitor to resubmit an already-saved lead. Both integrations remain unimplemented, so the API currently fails safely with `503` rather than reporting a false success.
+`POST /api/enquiries` requires a UUID `Idempotency-Key` header. The client creates it only after local validation, retains it across failed retries, and clears it after a fully successful submission. The API checks column T before appending: an existing Submission ID reuses the stored Lead ID and retries the Hostinger notification without creating another row.
+
+The `Leads` tab must have this additional final column before deployment:
+
+```text
+T: Submission ID
+```
+
+The complete mapping is therefore 20 columns, A:T. Google Sheets remains the source of truth. The server serialises concurrent requests for the same key within one Node process, but Google Sheets does not provide an atomic unique constraint across multiple server processes. Two identical requests handled concurrently by separate instances still have a small read-before-append race window; eliminating that would require a transactional persistence layer or a different Sheet-side coordination mechanism.
 
 ## Future deployment
 
