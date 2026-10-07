@@ -1,5 +1,5 @@
 import { useRef, useState, type FormEvent } from "react";
-import { serviceOptions, type EnquiryInput } from "@love-at-home/shared";
+import { normalizeAustralianPhone, serviceOptions, type EnquiryInput } from "@love-at-home/shared";
 import { Button } from "../components/Button";
 import { FormField } from "../components/FormField";
 import { SectionHeading } from "../components/SectionHeading";
@@ -23,6 +23,7 @@ export function EnquiryForm() {
     const next: Record<string, string> = {};
     if (!form.name.trim()) next.name = "Please enter your name.";
     if (!form.phone.trim()) next.phone = "Please enter a phone number.";
+    else if (!normalizeAustralianPhone(form.phone)) next.phone = "Please enter a valid Australian phone number.";
     if (form.email && !/^\S+@\S+\.\S+$/.test(form.email)) next.email = "Please enter a valid email address.";
     if (!form.suburbPostcode.trim()) next.suburbPostcode = "Please enter a suburb or postcode.";
     if (!form.serviceInterests.length) next.serviceInterests = "Please select at least one support option.";
@@ -42,7 +43,7 @@ export function EnquiryForm() {
     submissionId.current ??= crypto.randomUUID();
     setStatus("sending");
     try {
-      const response = await fetch("/api/enquiries", { method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": submissionId.current }, body: JSON.stringify(form) });
+      const response = await fetch("/api/enquiries", { method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": submissionId.current }, body: JSON.stringify({ ...form, phone: normalizeAustralianPhone(form.phone) }) });
       if (response.status === 409) {
         submissionId.current = null;
         setStatus("conflict");
