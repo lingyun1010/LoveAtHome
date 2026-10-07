@@ -76,7 +76,7 @@ The homepage content is separated from component logic where practical so approv
 
 ## Enquiry flow
 
-`POST /api/enquiries` requires a UUID `Idempotency-Key` header. The client creates it only after local validation, retains it across failed retries, and clears it after a fully successful submission. The API checks column T before appending: an existing Submission ID reuses the stored Lead ID and retries the Hostinger notification without creating another row.
+`POST /api/enquiries` requires a UUID `Idempotency-Key` header. The client creates it only after local validation, retains it across failed retries, and clears it after a fully successful submission. The API checks column T before appending: an existing Submission ID with identical material enquiry content reuses the stored Lead ID and retries the Hostinger notification without creating another row. Reusing the key with changed content returns `409 Conflict` rather than silently ignoring the correction.
 
 The `Leads` tab must have this additional final column before deployment:
 
@@ -85,6 +85,8 @@ T: Submission ID
 ```
 
 The complete mapping is therefore 20 columns, A:T. Google Sheets remains the source of truth. The server serialises concurrent requests for the same key within one Node process, but Google Sheets does not provide an atomic unique constraint across multiple server processes. Two identical requests handled concurrently by separate instances still have a small read-before-append race window; eliminating that would require a transactional persistence layer or a different Sheet-side coordination mechanism.
+
+Notification delivery state is not stored. If Hostinger accepts an email but the HTTP response is lost, a retry can send a second notification email. This Week 2 limitation can duplicate a notification, but it cannot create a second lead row.
 
 ## Future deployment
 
