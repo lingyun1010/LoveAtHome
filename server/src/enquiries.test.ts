@@ -5,7 +5,7 @@ import request from "supertest";
 import type { LeadRecord } from "@love-at-home/shared";
 import { createEnquiriesRouter } from "./routes/enquiries.js";
 import { LeadNotificationUnavailableError } from "./services/email.js";
-import { LeadPersistenceUnavailableError, type PersistLeadResult, toGoogleSheetRow, toLeadPersistenceError } from "./services/googleSheets.js";
+import { hasSameEnquiryContent, IdempotencyConflictError, LeadPersistenceUnavailableError, type PersistLeadResult, toGoogleSheetRow, toLeadPersistenceError } from "./services/googleSheets.js";
 
 const keyOne = "00000000-0000-4000-8000-000000000001";
 const keyTwo = "00000000-0000-4000-8000-000000000002";
@@ -35,7 +35,10 @@ function inMemorySheets() {
     get appendCount() { return appendCount; },
     async persistLead(candidate: LeadRecord): Promise<PersistLeadResult> {
       const existing = rows.get(candidate.submissionId);
-      if (existing) return { lead: existing, duplicate: true };
+      if (existing) {
+        if (!hasSameEnquiryContent(existing, candidate)) throw new IdempotencyConflictError();
+        return { lead: existing, duplicate: true };
+      }
       rows.set(candidate.submissionId, candidate);
       appendCount += 1;
       return { lead: candidate, duplicate: false };
@@ -43,8 +46,8 @@ function inMemorySheets() {
   };
 }
 
-function post(app: express.Express, key = keyOne) {
-  return request(app).post("/api/enquiries").set("Idempotency-Key", key).send(payload);
+function post(app: express.Express, key = keyOne, body = payload) {
+  return request(app).post("/api/enquiries").set("Idempotency-Key", key).send(body);
 }
 
 test("maps a lead to the exact 20-column A:T sheet order", () => {
@@ -89,6 +92,22 @@ test("retry with the same key does not append and reuses the Lead ID", async () 
   assert.equal(retry.body.leadId, first.body.leadId);
   assert.equal(retry.body.submittedAt, first.body.submittedAt);
   assert.equal(sheets.appendCount, 1);
+});
+
+test("same key with changed material content returns 409", async () => {
+  const sheets = inMemorySheets();
+  let emailCount = 0;
+  const app = appWith(sheets.persistLead.bind(sheets), async () => { emailCount += 1; });
+  assert.equal((await post(app)).status, 201);
+  const originalError = console.error;
+  console.error = () => undefined;
+  try {
+    const conflict = await post(app, keyOne, { ...payload, questions: "This answer has changed." });
+    assert.equal(conflict.status, 409);
+    assert.equal(conflict.body.success, false);
+    assert.equal(sheets.appendCount, 1);
+    assert.equal(emailCount, 1);
+  } finally { console.error = originalError; }
 });
 
 test("Sheet success plus email failure retries email without another row", async () => {

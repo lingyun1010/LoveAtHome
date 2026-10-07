@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { Router } from "express";
 import type { LeadRecord } from "@love-at-home/shared";
 import { emailService, LeadNotificationUnavailableError, type EmailService } from "../services/email.js";
-import { googleSheetsService, LeadPersistenceUnavailableError, type GoogleSheetsService } from "../services/googleSheets.js";
+import { googleSheetsService, IdempotencyConflictError, LeadPersistenceUnavailableError, type GoogleSheetsService } from "../services/googleSheets.js";
 import { validateEnquiry } from "../validation/enquiry.js";
 
 interface EnquiryDependencies { sheets: GoogleSheetsService; email: EmailService }
@@ -31,11 +31,11 @@ export function createEnquiriesRouter(dependencies: EnquiryDependencies = { shee
       await dependencies.email.sendLeadNotification(persisted.lead);
       res.status(201).json({ success: true, leadId: persisted.lead.leadId, submittedAt: persisted.lead.dateReceived, duplicate: persisted.duplicate });
     } catch (error) {
-      const category = error instanceof LeadPersistenceUnavailableError ? "google_sheets" : error instanceof LeadNotificationUnavailableError ? "hostinger_mail" : "unexpected";
+      const category = error instanceof IdempotencyConflictError ? "idempotency_conflict" : error instanceof LeadPersistenceUnavailableError ? "google_sheets" : error instanceof LeadNotificationUnavailableError ? "hostinger_mail" : "unexpected";
       console.error("Enquiry processing failed", { leadId: lead.leadId, category });
-      res.status(category === "unexpected" ? 500 : 503).json({
+      res.status(category === "idempotency_conflict" ? 409 : category === "unexpected" ? 500 : 503).json({
         success: false,
-        message: category === "google_sheets" ? "We could not save your enquiry. Please contact Love At Home directly." : category === "hostinger_mail" ? "Your enquiry could not be fully processed. Please contact Love At Home directly." : "We could not process the enquiry. Please try again.",
+        message: category === "idempotency_conflict" ? "This submission has changed since it was first received. Please start a new enquiry." : category === "google_sheets" ? "We could not save your enquiry. Please contact Love At Home directly." : category === "hostinger_mail" ? "Your enquiry could not be fully processed. Please contact Love At Home directly." : "We could not process the enquiry. Please try again.",
       });
     }
   });

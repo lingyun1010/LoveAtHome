@@ -11,6 +11,13 @@ export class LeadPersistenceUnavailableError extends Error {
   }
 }
 
+export class IdempotencyConflictError extends Error {
+  constructor() {
+    super("The Idempotency-Key has already been used with different enquiry content.");
+    this.name = "IdempotencyConflictError";
+  }
+}
+
 function requireGoogleConfig() {
   const spreadsheetId = process.env.GOOGLE_SHEET_ID;
   const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
@@ -46,17 +53,22 @@ export const googleSheetsService: GoogleSheetsService = {
         const range = `'${config.sheetName.replace(/'/g, "''")}'!A:T`;
         const existingRows = await sheets.spreadsheets.values.get({ spreadsheetId: config.spreadsheetId, range });
         const existingRow = existingRows.data.values?.find((row) => row[19] === lead.submissionId && row[0] && row[1]);
-        if (existingRow) return { lead: fromGoogleSheetRow(existingRow), duplicate: true };
+        if (existingRow) {
+          const existingLead = fromGoogleSheetRow(existingRow);
+          if (!hasSameEnquiryContent(existingLead, lead)) throw new IdempotencyConflictError();
+          return { lead: existingLead, duplicate: true };
+        }
 
         await sheets.spreadsheets.values.append({
           spreadsheetId: config.spreadsheetId,
           range,
-          valueInputOption: "USER_ENTERED",
+          valueInputOption: "RAW",
           insertDataOption: "INSERT_ROWS",
           requestBody: { values: [toGoogleSheetRow(lead)] },
         });
         return { lead, duplicate: false };
       } catch (error) {
+        if (error instanceof IdempotencyConflictError) throw error;
         console.error("Google Sheets persistence failed", {
           message: error instanceof Error ? error.message : String(error),
           name: error instanceof Error ? error.name : undefined,
@@ -73,6 +85,23 @@ export function toLeadPersistenceError(error: unknown): LeadPersistenceUnavailab
 
 export function toGoogleSheetRow(lead: LeadRecord): string[] {
   return [lead.leadId, lead.dateReceived, lead.name, lead.phone, lead.email || "", lead.suburbPostcode, lead.serviceInterests.join(", "), lead.fundingType, lead.preferredLanguage, lead.enquiryFor, lead.preferredContactMethod, lead.bestTimeToContact, lead.questions, lead.leadSource, lead.assignedOwner, lead.status, lead.nextFollowUpDate, lead.notes, lead.outcome, lead.submissionId];
+}
+
+export function hasSameEnquiryContent(existing: LeadRecord, candidate: LeadRecord): boolean {
+  const materialContent = (lead: LeadRecord) => ({
+    name: lead.name,
+    phone: lead.phone,
+    email: lead.email || "",
+    suburbPostcode: lead.suburbPostcode,
+    serviceInterests: [...lead.serviceInterests].sort(),
+    fundingType: lead.fundingType,
+    preferredLanguage: lead.preferredLanguage,
+    enquiryFor: lead.enquiryFor,
+    preferredContactMethod: lead.preferredContactMethod,
+    bestTimeToContact: lead.bestTimeToContact,
+    questions: lead.questions,
+  });
+  return JSON.stringify(materialContent(existing)) === JSON.stringify(materialContent(candidate));
 }
 
 function fromGoogleSheetRow(row: unknown[]): LeadRecord {
