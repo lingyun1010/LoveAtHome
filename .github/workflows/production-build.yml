@@ -25,6 +25,9 @@ jobs:
       - name: Install build dependencies
         run: npm ci --include=dev
 
+      - name: Build shared workspace for type resolution
+        run: npm run build -w shared
+
       - name: Typecheck
         run: npm run typecheck
 
