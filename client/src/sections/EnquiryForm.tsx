@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { serviceOptions, type EnquiryInput } from "@love-at-home/shared";
 import { Button } from "../components/Button";
 import { FormField } from "../components/FormField";
@@ -12,6 +12,7 @@ export function EnquiryForm() {
   const [form, setForm] = useState(initial);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const submissionId = useRef<string | null>(null);
   const set = (name: keyof FormState, value: string) => setForm((current) => ({ ...current, [name]: value }));
 
   function toggleService(value: string) {
@@ -31,16 +32,19 @@ export function EnquiryForm() {
 
   async function submit(event: FormEvent) {
     event.preventDefault();
+    if (status === "sending") return;
     if (!validate()) { setStatus("error"); return; }
     if (isPagesPreview) {
       setErrors({});
       setStatus("success");
       return;
     }
+    submissionId.current ??= crypto.randomUUID();
     setStatus("sending");
     try {
-      const response = await fetch("/api/enquiries", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
+      const response = await fetch("/api/enquiries", { method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": submissionId.current }, body: JSON.stringify(form) });
       if (!response.ok) throw new Error("Submission failed");
+      submissionId.current = null;
       setForm(initial); setErrors({}); setStatus("success");
     } catch { setStatus("error"); }
   }
