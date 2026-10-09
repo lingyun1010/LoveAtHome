@@ -18,6 +18,15 @@ function requireMailConfig() {
   return { mailbox, apiKey, notificationEmail };
 }
 
+function parseRecipients(value?: string): string[] {
+  return Array.from(new Set(
+    (value ?? "")
+      .split(",")
+      .map((address) => address.trim())
+      .filter(Boolean),
+  ));
+}
+
 export const emailService: EmailService = {
   async sendLeadNotification(lead) {
     const config = requireMailConfig();
@@ -34,10 +43,8 @@ export const emailService: EmailService = {
 };
 
 export function buildLeadNotification(lead: LeadRecord, to = process.env.LEAD_NOTIFICATION_EMAIL): V1SendRequest {
-  const recipients = Array.from(new Set([to, "info@loveathome.com.au"].filter((address): address is string => Boolean(address))));
-
   return {
-    to: recipients,
+    to: parseRecipients(to),
     displayName: "Love At Home",
     subject: `New website enquiry — ${lead.leadId} — ${lead.name}`,
     text: [
