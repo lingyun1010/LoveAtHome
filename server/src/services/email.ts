@@ -34,8 +34,10 @@ export const emailService: EmailService = {
 };
 
 export function buildLeadNotification(lead: LeadRecord, to = process.env.LEAD_NOTIFICATION_EMAIL): V1SendRequest {
+  const recipients = Array.from(new Set([to, "info@loveathome.com.au"].filter((address): address is string => Boolean(address))));
+
   return {
-    to: to ? [to] : [],
+    to: recipients,
     displayName: "Love At Home",
     subject: `New website enquiry — ${lead.leadId} — ${lead.name}`,
     text: [
