@@ -12,8 +12,8 @@ const keyOne = "00000000-0000-4000-8000-000000000001";
 const keyTwo = "00000000-0000-4000-8000-000000000002";
 const payload = {
   name: "Test Person", phone: "0400000000", email: "test@example.com", suburbPostcode: "Sydney 2000",
-  enquiryFor: "Myself", fundingType: "Private", preferredLanguage: "English", preferredContactMethod: "Phone",
-  bestTimeToContact: "Morning", serviceInterests: ["Personal Care", "Transport"], questions: "What is available?",
+  enquiryFor: "Myself", fundingType: "Private funding", preferredLanguage: "English", preferredContactMethod: "Phone",
+  bestTimeToContact: "Morning", serviceInterests: ["Personal Care", "Transport / Appointments"], questions: "What is available?",
 };
 
 const lead: LeadRecord = {
@@ -54,7 +54,7 @@ function post(app: express.Express, key = keyOne, body = payload) {
 test("maps a lead to the exact 20-column A:T sheet order", () => {
   assert.deepEqual(toGoogleSheetRow(lead), [
     "LAH-2026-ABC12345", "2026-10-07T00:00:00.000Z", "Test Person", "0400000000", "test@example.com",
-    "Sydney 2000", "Personal Care, Transport", "Private", "English", "Myself", "Phone", "Morning",
+    "Sydney 2000", "Personal Care, Transport / Appointments", "Private funding", "English", "Myself", "Phone", "Morning",
     "What is available?", "Website", "Unassigned", "New", "", "", "", keyOne,
   ]);
 });
