@@ -1,16 +1,10 @@
 export const serviceOptions = [
-  "Clinical Support",
+  "Clinical Support (Nursing / Allied Health)",
   "Personal Care",
-  "Nursing",
-  "Allied Health / OT / Physiotherapy",
-  "Independence / Social Support",
-  "Transport",
-  "Everyday Living",
-  "Cleaning",
-  "Shopping",
-  "Meal Preparation",
-  "Assistive Technology",
-  "Home Modifications",
+  "Social Support / Community Participation",
+  "Transport / Appointments",
+  "Everyday Living (Cleaning / Shopping / Meal Preparation)",
+  "Assistive Technology / Home Modifications",
   "Not sure / I would like advice",
 ] as const;
 
