@@ -6,9 +6,9 @@ export function Footer() {
         <p>Personalised home care for people and families across metropolitan Sydney.</p>
       </div>
       <div><h2>Explore</h2><a href="#services">Services</a><a href="#pricing">Pricing</a><a href="#team">Team</a></div>
-      <div><h2>Get in touch</h2><a href="#contact">Make an enquiry</a><p>Phone: To be confirmed</p><p>Email: To be confirmed</p></div>
+      <div><h2>Get in touch</h2><a href="#contact">Make an enquiry</a><p>Phone: <a href="tel:+61422559527">0422 559 527</a></p><p>Email: <a href="mailto:info@loveathome.com.au">info@loveathome.com.au</a></p></div>
     </div>
-    <div className="container footer-bottom"><span>© {new Date().getFullYear()} Love At Home</span><span>Privacy policy: To be supplied</span></div>
+    <div className="container footer-bottom"><span>© {new Date().getFullYear()} Love At Home</span><span><a href="https://drive.google.com/file/d/18ZRxlLqQywxnVmFWVbqedGJl1gZxIHAX/view" target="_blank" rel="noopener noreferrer">Privacy policy</a></span></div>
   </footer>;
 }
 
