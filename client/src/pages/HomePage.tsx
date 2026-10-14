@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Button } from "../components/Button";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
@@ -11,9 +12,18 @@ import { team } from "../data/team";
 import { trustReasons, trustStrip } from "../data/homepage";
 import { EnquiryForm } from "../sections/EnquiryForm";
 
-export function HomePage() {
+export function HomePage({ language, setLanguage }: { language: "en" | "zh"; setLanguage: (value: "en" | "zh") => void }) {
+  useEffect(() => {
+    const sections = document.querySelectorAll<HTMLElement>("main > section");
+    if (!("IntersectionObserver" in window) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.classList.add("is-visible"); observer.unobserve(entry.target); }
+    }), { threshold: 0.06, rootMargin: "0px 0px -30px 0px" });
+    sections.forEach(section => { section.classList.add("reveal-section"); observer.observe(section); });
+    return () => { observer.disconnect(); sections.forEach(section => section.classList.remove("reveal-section", "is-visible")); };
+  }, []);
   return <>
-    <Header />
+    <Header language={language} setLanguage={setLanguage} />
     <main id="top">
       <section className="hero"><div className="container hero-grid"><div className="hero-copy"><p className="eyebrow">PERSONALISED HOME CARE ACROSS SYDNEY</p><h1><span className="hero-title-line">Care that feels</span><em className="hero-title-line">closer to home.</em></h1><p className="hero-intro">Qualified, personalised home care for older people and people with disability — supporting aged care clients through Support at Home and providing NDIS-related services with a licensed provider, with culturally responsive care shaped around individual needs, preferences and everyday life.</p><div className="button-row"><Button href="#contact">Make an enquiry</Button><Button href="#services" variant="secondary">Explore our services</Button></div></div><div className="hero-visual" ><div className="visual-frame"><img src="https://images.unsplash.com/photo-1584515933487-779824d29309?w=1100&auto=format&fit=crop" alt="Care professional supporting an older person at home (illustrative photograph)" loading="eager" /></div><div className="hero-note"><span>Care, your way</span><strong>Warm. Personal. Close to home.</strong></div></div></div></section>
       <section className="trust-strip" aria-label="Love At Home trust points"><div className="container">{trustStrip.map((item) => <div key={item}><span aria-hidden="true">✓</span>{item}</div>)}</div></section>
