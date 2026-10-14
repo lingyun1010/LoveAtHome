@@ -237,3 +237,26 @@ h3 { font-size: 1.25rem; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; }
 }
+
+/* Website content refinement: imagery and responsive FAQ */
+.visual-frame::before, .visual-frame::after { display: none; }
+.visual-frame img { height: 100%; min-height: 470px; width: 100%; object-fit: cover; }
+.service-image { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 1rem; margin-bottom: 1.5rem; }
+.upgrade-image { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 1rem; margin-bottom: 1.5rem; }
+.upgrade-cards article { padding: 1rem; }
+.upgrade-cards article h3, .upgrade-cards article p { margin-inline: .6rem; }
+.pricing-card ul { padding-left: 1.3rem; color: var(--muted); }
+.price-caveat { font-size: .85rem; margin-top: 1rem; }
+.team-photo::before { display: none; }
+.team-photo img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+.team-photo-caption { position: absolute; bottom: .5rem; left: .5rem; border-radius: .4rem; padding: .2rem .5rem; color: #fff; background: rgba(0,0,0,.65); font-size: .65rem; }
+.sydney-map { border-radius: 1.5rem; overflow: hidden; min-height: 360px; background: #e8e9e6; }
+.sydney-map iframe { display: block; border: 0; width: 100%; height: 370px; }
+.faq-list { width: 100%; max-width: 840px; display: grid; gap: .8rem; }
+.faq-list details { min-width: 0; width: 100%; border: 1px solid var(--line); border-radius: 1rem; background: #fff; }
+.faq-list summary { padding: 1.2rem 1.4rem; font-weight: 700; cursor: pointer; list-style-position: inside; }
+.faq-list details > div { padding: 0 1.4rem 1.2rem; overflow-wrap: anywhere; color: var(--muted); }
+.faq-list details p { margin: 0; }
+#faq { scroll-margin-top: 95px; }
+@media (max-width: 980px) { .service-card { display: block; } }
+@media (max-width: 640px) { .visual-frame img { min-height: 360px; } .upgrade-image { aspect-ratio: 16 / 9; } .sydney-map, .sydney-map iframe { min-height: 290px; height: 290px; } }
