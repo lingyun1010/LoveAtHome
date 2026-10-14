@@ -2,7 +2,7 @@ export function Footer() {
   return <footer className="footer">
     <div className="container footer-grid">
       <div>
-        <a className="brand brand--light" href="#top"><span className="brand-mark" aria-hidden="true"><span>♥</span></span><span><strong>LOVE AT HOME</strong><small>Home Care</small></span></a>
+        <a className="brand brand--light footer-brand" href="#top" aria-label="Love At Home — back to top"><span className="brand-icon"><img src="https://raw.githubusercontent.com/lingyun1010/LoveAtHome/main/logo.png" alt="" /></span><span className="brand-wordmark"><strong>LOVE AT HOME</strong><small>爱家 · Home Care</small></span></a>
         <p>Personalised home care for people and families across metropolitan Sydney.</p>
       </div>
       <div><h2>Explore</h2><a href="#services">Services</a><a href="#pricing">Pricing</a><a href="#team">Team</a></div>
