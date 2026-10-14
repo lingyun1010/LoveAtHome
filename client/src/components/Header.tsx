@@ -25,12 +25,14 @@ export function Header({ language, setLanguage }: { language: "en" | "zh"; setLa
       <a className="brand" href="#top" aria-label="Love At Home home">
         <span className="brand-icon"><img src="https://raw.githubusercontent.com/lingyun1010/LoveAtHome/main/logo.png" alt="" /></span><span className="brand-wordmark"><strong>LOVE AT HOME</strong><small>爱家 · Home Care</small></span>
       </a>
+      <div className="header-actions">
+        <button className="language-control" type="button" aria-label={language === "en" ? "Switch to Chinese" : "切换为英文"} onClick={() => setLanguage(language === "en" ? "zh" : "en")}>{language === "en" ? "中文" : "EN"}</button>
       <button className="menu-toggle" type="button" aria-expanded={open} aria-controls="site-navigation" onClick={() => setOpen(!open)}>
         <span className="sr-only">{open ? "Close" : "Open"} menu</span><span /><span /><span />
       </button>
+      </div>
       <nav id="site-navigation" className={open ? "nav nav--open" : "nav"} aria-label="Primary navigation">
         {links.map(link => <a key={link.id} href={`#${link.id}`} onClick={() => setOpen(false)}>{link[language]}</a>)}
-        <button className="language-control" type="button" aria-label={language === "en" ? "Switch to Chinese" : "切换为英文"} onClick={() => setLanguage(language === "en" ? "zh" : "en")}>{language === "en" ? "中文" : "EN"}</button>
         <Button href="#contact" onClick={() => setOpen(false)}>{language === "en" ? "Enquire" : "咨询"}</Button>
       </nav>
     </div>
