@@ -283,3 +283,20 @@ h3 { font-size: 1.25rem; }
  .hero h1 { font-size: clamp(2.35rem, 10vw, 3.25rem); }
  .hero-title-line { white-space: normal; }
 }
+
+/* Navigation refinement: preserve document order while reducing desktop crowding. */
+.header-inner { gap: .7rem; }
+.nav { gap: clamp(.45rem, .9vw, .95rem); }
+.nav > a:not(.button) { font-size: .82rem; white-space: nowrap; }
+.nav .button { white-space: nowrap; min-height: 42px; padding-inline: 1rem; font-size: .82rem; }
+.language-control { white-space: nowrap; font-weight: 700; border-radius: .5rem; }
+.language-control:hover { background: var(--neutral); color: var(--terracotta); }
+.nav a:not(.button) { position: relative; transition: color .2s ease; }
+.nav a:not(.button)::after { content: ""; position: absolute; height: 2px; bottom: -.25rem; left: 0; right: 100%; background: var(--terracotta); transition: right .2s ease; }
+.nav a:not(.button):hover::after { right: 0; }
+.service-card, .pricing-card, .team-card, .upgrade-cards article, .faq-list details { transition: transform .25s ease, box-shadow .25s ease; }
+@media (hover: hover) { .pricing-card:hover, .team-card:hover, .upgrade-cards article:hover { transform: translateY(-3px); box-shadow: var(--shadow-sm); } }
+@media (max-width: 1170px) { .menu-toggle { display: block; } .nav { display: none; position: absolute; left: 1rem; right: 1rem; top: 76px; flex-direction: column; align-items: stretch; padding: 1rem; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--white); box-shadow: var(--shadow-md); gap: .3rem; max-height: calc(100dvh - 90px); overflow-y: auto; } .nav--open { display: flex; } .nav > a:not(.button), .language-control { padding: .65rem; text-align: left; } .nav a:not(.button)::after { display: none; } }
+.reveal-section { opacity: 0; transform: translateY(14px); transition: opacity .65s ease, transform .65s ease; }
+.reveal-section.is-visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .reveal-section, .reveal-section.is-visible { opacity: 1; transform: none; transition: none; } .service-card, .pricing-card, .team-card, .upgrade-cards article, .faq-list details { transition: none; } }
