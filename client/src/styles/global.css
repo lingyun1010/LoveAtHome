@@ -453,3 +453,9 @@ body { font-size: 20px; line-height: 1.75; }
   #pricing .split-heading .section-heading { margin-bottom: .5rem; }
   #pricing .pricing-disclaimer { margin-bottom: 1.1rem; }
 }
+
+/* Review: compact header action and consistent enquiry details label. */
+@media (min-width: 1281px) {
+ .header-actions > .button { min-height: 42px; padding: .35rem .9rem; font-size: .9rem; box-shadow: 0 4px 12px rgba(230,57,70,.13); }
+}
+.enquiry-more > summary { font-size: 1.08em; line-height: 1.5; }
