@@ -2,15 +2,11 @@ import { useEffect, useState } from "react";
 import { Button } from "./Button";
 
 const links = [
-  { id: "top", en: "Home", zh: "首页" },
   { id: "services", en: "Services", zh: "服务" },
   { id: "support-at-home", en: "Support at Home", zh: "居家养老" },
   { id: "ndis", en: "NDIS", zh: "NDIS" },
   { id: "pricing", en: "Pricing", zh: "价格" },
-  { id: "team", en: "Team", zh: "团队" },
   { id: "about", en: "About", zh: "关于我们" },
-  { id: "faq", en: "FAQ", zh: "常见问题" },
-  { id: "contact", en: "Contact", zh: "联系我们" },
 ] as const;
 
 export function Header({ language, setLanguage }: { language: "en" | "zh"; setLanguage: (value: "en" | "zh") => void }) {
