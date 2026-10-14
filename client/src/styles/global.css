@@ -388,3 +388,27 @@ body { font-size: 20px; line-height: 1.75; }
 .hero-carousel-pause { padding: .3rem .7rem; border-radius: 999px; border: 1px solid var(--terracotta); background: #fff; color: var(--ink); cursor: pointer; font-size: .8rem; }
 @media (max-width: 640px) { body { font-size: 18px; } .hero-carousel-controls { bottom: -2.1rem; } }
 @media (prefers-reduced-motion: reduce) { .hero-slides .hero-slide { transition: none; } }
+
+/* Mobile language selection remains accessible without opening navigation. */
+.header-actions { display: flex; align-items: center; gap: .6rem; order: 3; }
+.header-inner > .nav { order: 2; }
+.header-actions .language-control { min-width: 50px; min-height: 48px; padding: .5rem .6rem; background: var(--neutral); color: var(--ink); border-radius: 12px; }
+@media (min-width: 1281px) {
+  .header-inner > .nav { margin-left: auto; }
+  .header-actions { order: 3; }
+}
+@media (max-width: 1280px) {
+  .header-inner > .nav { order: 4; }
+  .header-actions { margin-left: auto; }
+  .header-actions .language-control { display: inline-flex; justify-content: center; align-items: center; }
+}
+@media (max-width: 640px) {
+  .header-actions { gap: .35rem; }
+  .header-actions .language-control { min-width: 48px; padding: .45rem; font-size: 1rem; }
+}
+/* Element-level scroll entrance effects (also apply on mobile). */
+.reveal-item { opacity: 0; transform: translate3d(0, 34px, 0); transition: opacity .85s ease, transform .85s cubic-bezier(.2,.7,.25,1); transition-delay: var(--reveal-delay, 0ms); }
+.reveal-item.is-visible { opacity: 1; transform: translate3d(0,0,0); }
+@media (prefers-reduced-motion: reduce) {
+  .reveal-item, .reveal-item.is-visible { opacity: 1; transform: none; transition: none; }
+}
