@@ -428,3 +428,18 @@ body { font-size: 20px; line-height: 1.75; }
 /* Pricing message appears once below the introduction, not in every card. */
 .pricing-comparison { text-align: center; max-width: 850px; margin: -1rem auto .75rem; font-weight: 700; color: var(--terracotta); font-size: 1.08rem; }
 .pricing-disclaimer { text-align: center; max-width: 850px; margin: 0 auto 2.5rem; color: var(--muted); font-size: .98rem; line-height: 1.65; }
+
+/* Keep the primary enquiry short while allowing optional detail expansion. */
+.enquiry-essential { margin-bottom: .2rem; }
+.enquiry-more { margin: .75rem 0 1.5rem; border: 1px solid var(--line); border-radius: var(--radius-md); background: #fff; }
+.enquiry-more > summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.2rem; cursor: pointer; font-size: 1.05rem; font-weight: 700; color: var(--terracotta); list-style: none; min-height: 58px; }
+.enquiry-more > summary::-webkit-details-marker { display: none; }
+.enquiry-more > summary span { transition: transform .2s ease; }
+.enquiry-more[open] > summary span { transform: rotate(180deg); }
+.enquiry-more-fields { padding: .25rem 1.2rem 1rem; }
+.enquiry-more-fields > .form-field { min-width: 0; }
+@media (max-width: 640px) {
+  .enquiry-more > summary { font-size: 1rem; padding: .9rem 1rem; }
+  .enquiry-more-fields { padding: .2rem 1rem .8rem; }
+}
+@media (prefers-reduced-motion: reduce) { .enquiry-more > summary span { transition: none; } }
