@@ -32,7 +32,6 @@ export function HeroCarousel() {
     <div className="hero-note"><span>Care, your way</span><strong>Warm. Personal. Close to home.</strong></div>
     <div className="hero-carousel-controls" aria-label="Choose a care photograph">
       {slides.map((slide, index) => <button key={slide.src} type="button" className={index === active ? "hero-carousel-dot hero-carousel-dot--active" : "hero-carousel-dot"} aria-label={`Show photograph ${index + 1} of ${slides.length}`} aria-pressed={active === index} onClick={() => setActive(index)} />)}
-      <button type="button" className="hero-carousel-pause" aria-label={paused ? "Resume slideshow" : "Pause slideshow"} onClick={() => setPaused(value => !value)}>{paused ? "Play" : "Pause"}</button>
     </div>
   </div>;
 }
