@@ -1,4 +1,4 @@
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { normalizeAustralianPhone, serviceOptions, type EnquiryInput } from "@love-at-home/shared";
 import { Button } from "../components/Button";
 import { FormField } from "../components/FormField";
@@ -13,6 +13,22 @@ export function EnquiryForm() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error" | "conflict">("idle");
   const submissionId = useRef<string | null>(null);
+  const multiSelectRef = useRef<HTMLDetailsElement>(null);
+  useEffect(() => {
+    const onOutside = (event: PointerEvent) => {
+      const details = multiSelectRef.current;
+      if (details && event.target instanceof Node && !details.contains(event.target)) details.open = false;
+    };
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && multiSelectRef.current?.open) {
+        multiSelectRef.current.open = false;
+        multiSelectRef.current.querySelector("summary")?.focus();
+      }
+    };
+    document.addEventListener("pointerdown", onOutside);
+    document.addEventListener("keydown", onEscape);
+    return () => { document.removeEventListener("pointerdown", onOutside); document.removeEventListener("keydown", onEscape); };
+  }, []);
   const set = (name: keyof FormState, value: string) => setForm((current) => ({ ...current, [name]: value }));
 
   function toggleService(value: string) {
@@ -58,7 +74,7 @@ export function EnquiryForm() {
   return <section className="section enquiry-section" id="contact">
     <div className="container enquiry-layout">
       <div><SectionHeading eyebrow="MAKE AN ENQUIRY" title="Tell us how we can help." intro="Share a few details and the Love At Home team can discuss the most suitable next step with you." />
-        <div className="contact-note"><strong>Prefer to talk?</strong><p>Public phone number to be confirmed.</p></div>
+        <div className="contact-note"><strong>Prefer to talk?</strong><p>Call <a href="tel:+61422559527">0422 559 527</a><br />Email <a href="mailto:info@loveathome.com.au">info@loveathome.com.au</a></p></div>
       </div>
       <form className="enquiry-form" onSubmit={submit} noValidate>
         <div className="form-grid">
@@ -74,7 +90,7 @@ export function EnquiryForm() {
         </div>
         <div className="support-options">
           <label id="support-options-label">Type of Support Needed <span aria-hidden="true">*</span></label>
-          <details className="multi-select">
+          <details className="multi-select" ref={multiSelectRef}>
             <summary aria-labelledby="support-options-label support-options-value" aria-describedby={errors.serviceInterests ? "support-options-error" : undefined}>
               <span id="support-options-value">
                 {form.serviceInterests.length === 0
