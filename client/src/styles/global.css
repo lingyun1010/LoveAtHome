@@ -320,3 +320,45 @@ h3 { font-size: 1.25rem; }
 @media (max-width: 1099px) {
  #pricing .section-heading h2, #team .section-heading h2 { white-space: normal; }
 }
+
+/* Accessibility refinement: comfortable reading sizes for older visitors. */
+body { font-size: 18px; line-height: 1.7; }
+.section-intro, .hero-intro { font-size: 1.15rem; line-height: 1.7; }
+.eyebrow { font-size: .85rem; }
+h2 { line-height: 1.2; }
+h3 { font-size: 1.35rem; }
+.button { font-size: 1rem; min-height: 52px; }
+.nav > a:not(.button) { font-size: .96rem; }
+.nav .button { font-size: .96rem; min-height: 48px; }
+.language-control { font-size: 1rem; }
+.service-card p, .service-card li, .pricing-card p, .pricing-card li,
+.team-card p, .trust-list p, .upgrade-cards p,
+.faq-list details > div { font-size: 1rem; line-height: 1.7; }
+.faq-list summary { font-size: 1.1rem; line-height: 1.5; padding: 1.15rem 1.4rem; }
+.form-field label, .support-options > label { font-size: 1.05rem; }
+.form-field input, .form-field select, .form-field textarea, .multi-select summary {
+  font-size: 1rem; min-height: 54px;
+}
+.form-field small, .field-error, .price-caveat, .team-languages,
+.checkbox-grid label, .multi-select__panel > p { font-size: .94rem; line-height: 1.6; }
+.contact-note, .contact-note p, .availability-note { font-size: 1rem; }
+.footer h2 { font-size: 1.15rem; }
+.footer a:not(.brand), .footer p { font-size: 1rem; line-height: 1.65; }
+.footer-bottom { font-size: .93rem; }
+.footer-brand { display: inline-flex; align-items: center; gap: .65rem; margin-bottom: 1rem; }
+.footer-brand .brand-icon { width: 62px; height: 62px; flex-basis: 62px; background: #fff; border-radius: 14px; padding: 3px; }
+.footer-brand .brand-wordmark strong { color: #fff; font-size: 1.16rem; }
+.footer-brand .brand-wordmark small { color: #ddd0ca; font-size: .88rem; }
+@media (max-width: 1280px) {
+  .menu-toggle { display: block; }
+  .nav { display: none; position: absolute; left: 1rem; right: 1rem; top: 76px; flex-direction: column; align-items: stretch; padding: 1rem; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--white); box-shadow: var(--shadow-md); gap: .3rem; max-height: calc(100dvh - 90px); overflow-y: auto; }
+  .nav--open { display: flex; }
+  .nav > a:not(.button), .language-control { padding: .75rem; text-align: left; }
+  .nav a:not(.button)::after { display: none; }
+}
+@media (max-width: 640px) {
+  body { font-size: 17px; }
+  .section-intro, .hero-intro { font-size: 1.08rem; }
+  .footer-brand .brand-icon { width: 54px; height: 54px; flex-basis: 54px; }
+  .footer-brand .brand-wordmark strong { font-size: 1.06rem; }
+}
