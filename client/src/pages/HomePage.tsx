@@ -15,13 +15,33 @@ import { EnquiryForm } from "../sections/EnquiryForm";
 
 export function HomePage({ language, setLanguage }: { language: "en" | "zh"; setLanguage: (value: "en" | "zh") => void }) {
   useEffect(() => {
-    const sections = document.querySelectorAll<HTMLElement>("main > section");
-    if (!("IntersectionObserver" in window) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const observer = new IntersectionObserver(entries => entries.forEach(entry => {
-      if (entry.isIntersecting) { entry.target.classList.add("is-visible"); observer.unobserve(entry.target); }
-    }), { threshold: 0.06, rootMargin: "0px 0px -30px 0px" });
-    sections.forEach(section => { section.classList.add("reveal-section"); observer.observe(section); });
-    return () => { observer.disconnect(); sections.forEach(section => section.classList.remove("reveal-section", "is-visible")); };
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced || !("IntersectionObserver" in window)) return;
+    // Animate actual content blocks rather than the entire section: a large section
+    // can intersect before its cards enter the viewport, making motion invisible.
+    const elements = Array.from(document.querySelectorAll<HTMLElement>(
+      "main .section-heading, main .services-grid > *, main .pricing-grid > *, main .team-grid > *, main .upgrade-cards > *, main .trust-list > *, main .faq-list > *, main .ndis-image, main .sydney-map, main .contact-note, main .enquiry-form"
+    ));
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: "0px 0px -35px 0px" });
+    elements.forEach((el, i) => {
+      el.classList.add("reveal-item");
+      el.style.setProperty("--reveal-delay", `${(i % 3) * 90}ms`);
+      observer.observe(el);
+    });
+    return () => {
+      observer.disconnect();
+      elements.forEach(el => {
+        el.classList.remove("reveal-item", "is-visible");
+        el.style.removeProperty("--reveal-delay");
+      });
+    };
   }, []);
   return <>
     <Header language={language} setLanguage={setLanguage} />
