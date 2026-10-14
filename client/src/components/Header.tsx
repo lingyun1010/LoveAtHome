@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "./Button";
 
-const links = ["Home", "About", "Services", "Pricing", "Team", "Contact"];
+const links = ["Home", "Support at Home", "NDIS", "About", "Services", "Pricing", "Team", "Contact"];
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -19,7 +19,7 @@ export function Header() {
         <span className="sr-only">{open ? "Close" : "Open"} menu</span><span /><span /><span />
       </button>
       <nav id="site-navigation" className={open ? "nav nav--open" : "nav"} aria-label="Primary navigation">
-        {links.map((link) => <a key={link} href={link === "Home" ? "#top" : `#${link.toLowerCase()}`} onClick={() => setOpen(false)}>{link}</a>)}
+        {links.map((link) => <a key={link} href={link === "Home" ? "#top" : link === "Support at Home" ? "#support-at-home" : link === "NDIS" ? "#ndis" : `#${link.toLowerCase()}`} onClick={() => setOpen(false)}>{link}</a>)}
         <button className="language-control" type="button" aria-label="Language selection placeholder">EN / 中文</button>
         <Button href="#contact" onClick={() => setOpen(false)}>Make an enquiry</Button>
       </nav>
