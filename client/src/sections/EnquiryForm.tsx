@@ -82,6 +82,7 @@ export function EnquiryForm() {
         <div className="form-grid enquiry-essential">
           <FormField label="Name" name="name" value={form.name} onChange={(e) => set("name", e.target.value)} required error={errors.name} autoComplete="name" />
           <FormField label="Phone" name="phone" type="tel" value={form.phone} onChange={(e) => set("phone", e.target.value)} required error={errors.phone} autoComplete="tel" />
+          <FormField label="Email (optional)" name="email" type="email" value={form.email} onChange={(e) => set("email", e.target.value)} error={errors.email} autoComplete="email" />
           <FormField label="Suburb / postcode" name="suburbPostcode" value={form.suburbPostcode} onChange={(e) => set("suburbPostcode", e.target.value)} required error={errors.suburbPostcode} autoComplete="postal-code" />
         </div>
         <div className="support-options">
@@ -106,7 +107,6 @@ export function EnquiryForm() {
         <details className="enquiry-more" ref={moreDetailsRef}>
           <summary>Additional details (optional) <span aria-hidden="true">⌄</span></summary>
           <div className="form-grid enquiry-more-fields">
-            <FormField label="Email (optional)" name="email" type="email" value={form.email} onChange={(e) => set("email", e.target.value)} error={errors.email} autoComplete="email" />
             <FormField kind="select" label="Who is the enquiry for? (optional)" name="enquiryFor" value={form.enquiryFor} onChange={(e) => set("enquiryFor", e.target.value)}><option value="">Select an option</option><option>Myself</option><option>A family member</option><option>Someone I care for</option><option>Other</option></FormField>
             <FormField kind="select" label="Funding type (if known)" name="fundingType" value={form.fundingType} onChange={(e) => set("fundingType", e.target.value)}><option value="">Select an option</option><option>Support at Home</option><option>NDIS</option><option>Private funding</option><option>Not sure</option></FormField>
             <FormField label="Preferred language (optional)" name="preferredLanguage" value={form.preferredLanguage} onChange={(e) => set("preferredLanguage", e.target.value)} placeholder="e.g. English, Mandarin" />
