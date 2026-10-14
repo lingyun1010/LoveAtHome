@@ -23,7 +23,7 @@ export function Header({ language, setLanguage }: { language: "en" | "zh"; setLa
   return <header className="site-header">
     <div className="container header-inner">
       <a className="brand" href="#top" aria-label="Love At Home home">
-        <span className="brand-lockup" aria-hidden="true"><img src={`${import.meta.env.BASE_URL}brand-concept-a.png`} alt="" /></span>
+        <span className="brand-icon"><img src="https://raw.githubusercontent.com/lingyun1010/LoveAtHome/main/logo.png" alt="" /></span><span className="brand-wordmark"><strong>LOVE AT HOME</strong><small>爱家 · Home Care</small></span>
       </a>
       <button className="menu-toggle" type="button" aria-expanded={open} aria-controls="site-navigation" onClick={() => setOpen(!open)}>
         <span className="sr-only">{open ? "Close" : "Open"} menu</span><span /><span /><span />
