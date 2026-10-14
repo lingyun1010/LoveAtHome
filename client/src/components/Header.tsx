@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "./Button";
 
-const links = ["Home", "Support at Home", "NDIS", "About", "Services", "Pricing", "Team", "Contact"];
+const links = ["Home", "Support at Home", "NDIS", "About", "Services", "Pricing", "Team", "FAQ", "Contact"];
 
 export function Header() {
   const [open, setOpen] = useState(false);
