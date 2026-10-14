@@ -443,3 +443,13 @@ body { font-size: 20px; line-height: 1.75; }
   .enquiry-more-fields { padding: .2rem 1rem .8rem; }
 }
 @media (prefers-reduced-motion: reduce) { .enquiry-more > summary span { transition: none; } }
+
+/* Pricing: remove the excess gap below the centred heading. */
+#pricing .split-heading { align-items: flex-start; }
+#pricing .split-heading .section-heading { margin-bottom: .7rem; }
+#pricing .section-heading .section-intro { margin-bottom: 0; }
+#pricing .pricing-disclaimer { margin-top: .35rem; margin-bottom: 1.5rem; }
+@media (max-width: 640px) {
+  #pricing .split-heading .section-heading { margin-bottom: .5rem; }
+  #pricing .pricing-disclaimer { margin-bottom: 1.1rem; }
+}
