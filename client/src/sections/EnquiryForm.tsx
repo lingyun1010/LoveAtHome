@@ -107,11 +107,11 @@ export function EnquiryForm() {
         <details className="enquiry-more" ref={moreDetailsRef}>
           <summary>Additional details (optional) <span aria-hidden="true">⌄</span></summary>
           <div className="form-grid enquiry-more-fields">
-            <FormField kind="select" label="Who is the enquiry for? (optional)" name="enquiryFor" value={form.enquiryFor} onChange={(e) => set("enquiryFor", e.target.value)}><option value="">Select an option</option><option>Myself</option><option>A family member</option><option>Someone I care for</option><option>Other</option></FormField>
+            <FormField kind="select" label="Who is the enquiry for?" name="enquiryFor" value={form.enquiryFor} onChange={(e) => set("enquiryFor", e.target.value)}><option value="">Select an option</option><option>Myself</option><option>A family member</option><option>Someone I care for</option><option>Other</option></FormField>
             <FormField kind="select" label="Funding type (if known)" name="fundingType" value={form.fundingType} onChange={(e) => set("fundingType", e.target.value)}><option value="">Select an option</option><option>Support at Home</option><option>NDIS</option><option>Private funding</option><option>Not sure</option></FormField>
-            <FormField label="Preferred language (optional)" name="preferredLanguage" value={form.preferredLanguage} onChange={(e) => set("preferredLanguage", e.target.value)} placeholder="e.g. English, Mandarin" />
-            <FormField kind="select" label="Preferred contact method (optional)" name="preferredContactMethod" value={form.preferredContactMethod} onChange={(e) => set("preferredContactMethod", e.target.value)}><option value="">Select an option</option><option>Phone call</option><option>Email</option><option>SMS</option></FormField>
-            <FormField label="Best time to contact (optional)" name="bestTimeToContact" value={form.bestTimeToContact} onChange={(e) => set("bestTimeToContact", e.target.value)} placeholder="e.g. Weekday mornings" />
+            <FormField label="Preferred language" name="preferredLanguage" value={form.preferredLanguage} onChange={(e) => set("preferredLanguage", e.target.value)} placeholder="e.g. English, Mandarin" />
+            <FormField kind="select" label="Preferred contact method" name="preferredContactMethod" value={form.preferredContactMethod} onChange={(e) => set("preferredContactMethod", e.target.value)}><option value="">Select an option</option><option>Phone call</option><option>Email</option><option>SMS</option></FormField>
+            <FormField label="Best time to contact" name="bestTimeToContact" value={form.bestTimeToContact} onChange={(e) => set("bestTimeToContact", e.target.value)} placeholder="e.g. Weekday mornings" />
           </div>
         </details>
         <FormField kind="textarea" label="What questions do you have?" name="questions" value={form.questions} onChange={(e) => set("questions", e.target.value)} rows={5} placeholder="Tell us what you would like to ask or understand." hint="Please do not include detailed medical or sensitive personal information in this initial enquiry." />
