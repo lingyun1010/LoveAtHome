@@ -412,3 +412,15 @@ body { font-size: 20px; line-height: 1.75; }
 @media (prefers-reduced-motion: reduce) {
   .reveal-item, .reveal-item.is-visible { opacity: 1; transform: none; transition: none; }
 }
+
+/* Centre desktop navigation against the full header, independently of side widths. */
+@media (min-width: 1281px) {
+  .header-inner { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); align-items: center; }
+  .header-inner > .brand { grid-column: 1; justify-self: start; }
+  .header-inner > .nav { grid-column: 2; justify-self: center; margin-left: 0; }
+  .header-inner > .header-actions { grid-column: 3; justify-self: end; margin-left: 0; }
+  .header-actions .menu-toggle { display: none; }
+}
+@media (max-width: 1280px) {
+  .header-actions > .button { display: none; }
+}
