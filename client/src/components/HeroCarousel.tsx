@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 
 // Client-supplied photos, served from Vite public assets.
 const slides = [
-  { src: "/images/hero/care-at-home-01.jpg", alt: "Carer supporting a client at home" },
-  { src: "/images/hero/clinical-care-02.jpg", alt: "Healthcare professional, illustrative image" },
-  { src: "/images/hero/community-outing-03.jpg", alt: "People enjoying time together in the community" },
-  { src: "/images/hero/home-living-04.jpg", alt: "A welcoming home kitchen, illustrative image" },
+  { src: `${import.meta.env.BASE_URL}images/hero/care-at-home-01.jpg`, alt: "Carer supporting a client at home" },
+  { src: `${import.meta.env.BASE_URL}images/hero/clinical-care-02.jpg`, alt: "Healthcare professional, illustrative image" },
+  { src: `${import.meta.env.BASE_URL}images/hero/community-outing-03.jpg`, alt: "People enjoying time together in the community" },
+  { src: `${import.meta.env.BASE_URL}images/hero/home-living-04.jpg`, alt: "A welcoming home kitchen, illustrative image" },
 ];
 
 export function HeroCarousel() {
