@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
-// Replace illustration URLs with approved assets in /images/hero/ as they become available.
+// Client-supplied photos, served from Vite public assets.
 const slides = [
-  { src: "https://images.unsplash.com/photo-1584515933487-779824d29309?w=1100&auto=format&fit=crop", alt: "Illustrative image of a care interaction; replace with approved Love At Home photo" },
-  { src: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1100&auto=format&fit=crop", alt: "Healthcare professional, illustrative image" },
-  { src: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1100&auto=format&fit=crop", alt: "People enjoying time together in the community" },
-  { src: "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=1100&auto=format&fit=crop", alt: "A welcoming home kitchen, illustrative image" },
+  { src: "/images/hero/care-at-home-01.jpg", alt: "Carer supporting a client at home" },
+  { src: "/images/hero/clinical-care-02.jpg", alt: "Healthcare professional, illustrative image" },
+  { src: "/images/hero/community-outing-03.jpg", alt: "People enjoying time together in the community" },
+  { src: "/images/hero/home-living-04.jpg", alt: "A welcoming home kitchen, illustrative image" },
 ];
 
 export function HeroCarousel() {
