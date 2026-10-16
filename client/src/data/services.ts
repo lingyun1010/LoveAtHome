@@ -12,8 +12,8 @@ export const services = [
     title: "Independence",
     image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=900&auto=format&fit=crop",
     imageAlt: "People enjoying community and social participation",
-    description: "Practical support to stay connected, confident and active in everyday life.",
-    items: ["Social Support", "Transport", "Appointments", "Community Participation"],
+    description: "Transport, community social outings and companionship to help people connect and stay active.",
+    items: ["Community social outings", "Transport", "Appointments", "Companionship and participation"],
   },
   {
     number: "03",
