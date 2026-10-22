@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { Copy, Language } from "../i18n";
 import { Button } from "./Button";
 
 const links = [
@@ -9,7 +10,7 @@ const links = [
   { id: "about", en: "About", zh: "关于我们" },
 ] as const;
 
-export function Header({ language, setLanguage }: { language: "en" | "zh"; setLanguage: (value: "en" | "zh") => void }) {
+export function Header({ language, setLanguage, t }: { language: Language; setLanguage: (value: Language) => void; t: Copy["header"] }) {
   const [open, setOpen] = useState(false);
   useEffect(() => {
     const close = () => setOpen(false);
@@ -18,17 +19,17 @@ export function Header({ language, setLanguage }: { language: "en" | "zh"; setLa
   }, []);
   return <header className="site-header">
     <div className="container header-inner">
-      <a className="brand" href="#top" aria-label="Love At Home home">
+      <a className="brand" href="#top" aria-label={t.home}>
         <span className="brand-icon"><img src="https://raw.githubusercontent.com/lingyun1010/LoveAtHome/main/logo.png" alt="" /></span><span className="brand-wordmark"><strong>LOVE AT HOME</strong><small>爱家 · Home Care</small></span>
       </a>
       <div className="header-actions">
-        <Button href="#contact" onClick={() => setOpen(false)}>{language === "en" ? "Enquire" : "咨询"}</Button>
-        <button className="language-control" type="button" aria-label={language === "en" ? "Switch to Chinese" : "切换为英文"} onClick={() => setLanguage(language === "en" ? "zh" : "en")}>{language === "en" ? "中文" : "EN"}</button>
+        <Button href="#contact" onClick={() => setOpen(false)}>{t.enquire}</Button>
+        <button className="language-control" type="button" aria-label={t.switchLabel} onClick={() => setLanguage(language === "en" ? "zh" : "en")}>{t.switchText}</button>
       <button className="menu-toggle" type="button" aria-expanded={open} aria-controls="site-navigation" onClick={() => setOpen(!open)}>
-        <span className="sr-only">{open ? "Close" : "Open"} menu</span><span /><span /><span />
+        <span className="sr-only">{open ? t.closeMenu : t.openMenu}</span><span /><span /><span />
       </button>
       </div>
-      <nav id="site-navigation" className={open ? "nav nav--open" : "nav"} aria-label="Primary navigation">
+      <nav id="site-navigation" className={open ? "nav nav--open" : "nav"} aria-label={t.navLabel}>
         {links.map(link => <a key={link.id} href={`#${link.id}`} onClick={() => setOpen(false)}>{link[language]}</a>)}
       </nav>
     </div>
