@@ -72,12 +72,12 @@ const en = {
   team: {
     eyebrow: "MEET THE TEAM",
     title: "Experienced people, thoughtful care.",
-    intro: "Meet the people helping clients navigate care, coordinate services and stay connected with their communities. Further biographies are being confirmed.",
+    intro: "Meet the people helping clients navigate care, coordinate services and stay connected with their communities.",
     portraitAlt: (name: string) => `${name} team portrait`,
     photoPending: ["Staff photo", "coming soon"],
     members: [
-      { name: "Luke Huang", role: "General Manager · Case Manager · Registered Nurse", introduction: "Luke leads the team with a background in nursing and care management, helping clients and families discuss appropriate home care options.", languages: "Languages: please enquire" },
-      { name: "Vivi", role: "Case Manager", introduction: "Vivi supports coordination of services and communication with clients and families. Full biography to follow.", languages: "Languages: please enquire" },
+      { name: "Luke Huang", role: "General Manager · Case Manager · Registered Nurse", introduction: "Luke is a Registered Nurse with more than 15 years of experience in Sydney hospitals, including intensive care at Blacktown Hospital and clinical nurse education at Westmead and Mount Druitt hospitals. Since 2024 he has worked in home care as a case manager for Support at Home and NDIS clients, and he now leads Love At Home's daily operations, compliance, policy and staff training. He holds a Bachelor of Nursing, a Master of Nursing (Clinical Teaching), a Master of Information Systems and a Certificate IV in Training and Assessment.", languages: "Languages: English, Mandarin" },
+      { name: "Vivi", role: "Case Manager · Client Services & Administration", introduction: "Vivi looks after the day-to-day administration that keeps care running smoothly, from new enquiries and client intake to scheduling, service agreements, records and invoicing. She is often the first point of contact for clients and families, making sure questions are answered promptly and every visit is coordinated with the care team.", languages: "Languages: English, Mandarin" },
       { name: "Chivas Yang", role: "Physiotherapist · Rehabilitation Specialist", introduction: "Chivas holds a master's in physiotherapy from Cardiff University and is a PhD candidate in medicine at the University of Sydney. He previously led the VIP therapy team at the Jiangsu Province Hospital Rehabilitation Medicine Centre. Combining acupuncture and tuina with physiotherapy, he treats acute and chronic musculoskeletal pain and supports recovery after fractures, ligament surgery, stroke, spinal cord injury and brain injury.", languages: "Languages: English, Mandarin" },
     ],
   },
@@ -252,12 +252,12 @@ const zh: Copy = {
   team: {
     eyebrow: "认识我们的团队",
     title: "经验丰富，用心照护。",
-    intro: "认识我们的团队成员——他们帮助客户了解护理服务、协调各项安排，并与社区保持联系。更多成员简介正在确认中。",
+    intro: "认识我们的团队成员——他们帮助客户了解护理服务、协调各项安排，并与社区保持联系。",
     portraitAlt: (name: string) => `${name} 团队照片`,
     photoPending: ["员工照片", "即将上线"],
     members: [
-      { name: "Luke Huang", role: "总经理 · 个案经理 · 注册护士", introduction: "Luke 拥有护理及护理管理背景，带领团队帮助客户及其家人探讨合适的居家护理方案。", languages: "语言：欢迎咨询" },
-      { name: "Vivi", role: "个案经理", introduction: "Vivi 负责协调各项服务，并与客户及其家人保持沟通。完整简介即将更新。", languages: "语言：欢迎咨询" },
+      { name: "Luke Huang", role: "总经理 · 个案经理 · 注册护士", introduction: "Luke 是一名注册护士，在悉尼多家医院拥有超过 15 年的工作经验，曾在 Blacktown 医院重症监护病房工作，并在 Westmead 医院和 Mount Druitt 医院担任临床护理教育者。自 2024 年起，他投身居家护理行业，担任 Support at Home 及 NDIS 客户的个案经理，现负责爱家的日常运营、合规、政策制定及员工培训。他拥有护理学学士、护理学硕士（临床教学）、信息系统硕士学位，以及培训与评估四级证书。", languages: "语言：英语、普通话" },
+      { name: "Vivi", role: "个案经理 · 客户服务与行政", introduction: "Vivi 负责让护理服务顺畅运转的日常行政工作，包括新咨询与客户登记、排班安排、服务协议、档案记录及账单。她通常是客户及其家人的第一联系人，确保问题得到及时解答，每一次上门服务都与护理团队协调妥当。", languages: "语言：英语、普通话" },
       { name: "杨智为 Chivas Yang", role: "物理治疗师 · 康复治疗专家", introduction: "杨智为毕业于英国卡迪夫大学物理治疗专业（硕士），目前在悉尼大学攻读医学博士。曾任江苏省人民医院康复医学中心 VIP 治疗组组长。他擅长结合中医针灸推拿与西医物理治疗，治疗急慢性肌肉骨骼疼痛，以及骨折或韧带损伤术后、卒中、脊髓损伤和脑外伤后的康复。", languages: "语言：英语、普通话" },
     ],
   },
