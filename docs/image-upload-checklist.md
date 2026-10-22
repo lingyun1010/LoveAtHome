@@ -9,8 +9,8 @@ These image paths are proposed and not yet live. Keep illustrative placeholders 
 | images/hero/community-outing-03.jpg | Group social outing | Awaiting |
 | images/hero/home-living-04.jpg | Bright home living | Awaiting |
 | images/team/luke-huang.jpg | Luke headshot | Select/verify from five Drive profile photos |
-| images/team/vivi.jpg | Vivi headshot | Awaiting |
-| images/team/rehabilitation-doctor.jpg | Doctor portrait | Awaiting identity, credentials and approval |
+| images/team/vivi.jpg | Vivi headshot | Added from Drive (Vivi_Photo) |
+| images/team/chivas-yang.jpg | Chivas Yang portrait | Added from Drive (Chivas Yang folder) |
 | images/services/clinical-care.jpg | Nurse or allied health service | Awaiting |
 | images/services/community-social.jpg | Community participation | Awaiting |
 | images/services/everyday-living.jpg | Household support | Awaiting |

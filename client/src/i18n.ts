@@ -72,13 +72,13 @@ const en = {
   team: {
     eyebrow: "MEET THE TEAM",
     title: "Experienced people, thoughtful care.",
-    intro: "Meet the people helping clients navigate care, coordinate services and stay connected with their communities. Individual photographs and biographies are being confirmed.",
+    intro: "Meet the people helping clients navigate care, coordinate services and stay connected with their communities. Further biographies are being confirmed.",
     portraitAlt: (name: string) => `${name} team portrait`,
     photoPending: ["Staff photo", "coming soon"],
     members: [
       { name: "Luke Huang", role: "General Manager · Case Manager · Registered Nurse", introduction: "Luke leads the team with a background in nursing and care management, helping clients and families discuss appropriate home care options.", languages: "Languages: please enquire" },
-      { name: "Vivi", role: "Case Manager", introduction: "Vivi supports coordination of services and communication with clients and families. Full biography and photograph to follow.", languages: "Languages: please enquire" },
-      { name: "Clinical team member", role: "Rehabilitation doctor · Profile pending confirmation", introduction: "A new rehabilitation doctor is joining our team. Name, credentials, availability and biography will be added once approved.", languages: "Languages and clinical services: to be confirmed" },
+      { name: "Vivi", role: "Case Manager", introduction: "Vivi supports coordination of services and communication with clients and families. Full biography to follow.", languages: "Languages: please enquire" },
+      { name: "Chivas Yang", role: "Physiotherapist · Rehabilitation Specialist", introduction: "Chivas holds a master's in physiotherapy from Cardiff University and is a PhD candidate in medicine at the University of Sydney. He previously led the VIP therapy team at the Jiangsu Province Hospital Rehabilitation Medicine Centre. Combining acupuncture and tuina with physiotherapy, he treats acute and chronic musculoskeletal pain and supports recovery after fractures, ligament surgery, stroke, spinal cord injury and brain injury.", languages: "Languages: English, Mandarin" },
     ],
   },
   why: {
@@ -252,13 +252,13 @@ const zh: Copy = {
   team: {
     eyebrow: "认识我们的团队",
     title: "经验丰富，用心照护。",
-    intro: "认识我们的团队成员——他们帮助客户了解护理服务、协调各项安排，并与社区保持联系。个人照片及简介正在确认中。",
+    intro: "认识我们的团队成员——他们帮助客户了解护理服务、协调各项安排，并与社区保持联系。更多成员简介正在确认中。",
     portraitAlt: (name: string) => `${name} 团队照片`,
     photoPending: ["员工照片", "即将上线"],
     members: [
       { name: "Luke Huang", role: "总经理 · 个案经理 · 注册护士", introduction: "Luke 拥有护理及护理管理背景，带领团队帮助客户及其家人探讨合适的居家护理方案。", languages: "语言：欢迎咨询" },
-      { name: "Vivi", role: "个案经理", introduction: "Vivi 负责协调各项服务，并与客户及其家人保持沟通。完整简介及照片即将更新。", languages: "语言：欢迎咨询" },
-      { name: "临床团队成员", role: "康复医生 · 资料待确认", introduction: "一位新的康复医生即将加入我们的团队。姓名、资质、可服务时间及简介将在确认后更新。", languages: "语言及临床服务：待确认" },
+      { name: "Vivi", role: "个案经理", introduction: "Vivi 负责协调各项服务，并与客户及其家人保持沟通。完整简介即将更新。", languages: "语言：欢迎咨询" },
+      { name: "杨智为 Chivas Yang", role: "物理治疗师 · 康复治疗专家", introduction: "杨智为毕业于英国卡迪夫大学物理治疗专业（硕士），目前在悉尼大学攻读医学博士。曾任江苏省人民医院康复医学中心 VIP 治疗组组长。他擅长结合中医针灸推拿与西医物理治疗，治疗急慢性肌肉骨骼疼痛，以及骨折或韧带损伤术后、卒中、脊髓损伤和脑外伤后的康复。", languages: "语言：英语、普通话" },
     ],
   },
   why: {
