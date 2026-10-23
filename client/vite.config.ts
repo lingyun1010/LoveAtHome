@@ -12,7 +12,7 @@ export default defineConfig(({ mode }) => {
         name: "pages-preview-noindex",
         transformIndexHtml(html) {
           return isPagesPreview
-            ? html.replace("<meta name=\"theme-color\"", "<meta name=\"robots\" content=\"noindex,nofollow\" />\n    <meta name=\"theme-color\"")
+            ? html.replace("index,follow,max-image-preview:large", "noindex,nofollow")
             : html;
         },
       },

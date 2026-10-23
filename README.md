@@ -118,5 +118,5 @@ TypeScript, Vite and the other compilation tools intentionally remain developmen
 - Final privacy policy and production domain
 - Google Sheet credentials and final append implementation
 - Selected email provider and notification implementation
-- Production Open Graph image, canonical URL, robots and sitemap domain
+- Google Search Console property verification and sitemap submission after production deployment
 - Future bilingual translations and internationalisation wiring
