@@ -13,7 +13,7 @@ const en = {
   hero: {
     eyebrow: "PERSONALISED HOME CARE ACROSS SYDNEY",
     titleLine1: "Care that feels",
-    titleLine2: "closer to home.",
+    titleLine2: "closer to home",
     intro: "Support at Home aged care and NDIS-related services across Sydney. Our clinician-led team combines personalised care, competitive service rates and meaningful community connections, delivered with culturally responsive support and in partnership with licensed providers where applicable.",
     primary: "Make an enquiry",
     secondary: "Explore our services",
