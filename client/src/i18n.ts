@@ -30,7 +30,7 @@ const en = {
   trustStrip: ["Clinician-led care team", "Competitive support-worker rates", "Culturally responsive care", "Community outings & connections"],
   services: {
     eyebrow: "OUR SERVICES",
-    title: "Practical support for everyday life.",
+    title: "Practical support for everyday life",
     intro: "Three clear areas of support for Support at Home and NDIS clients, shaped around each person's needs and circumstances.",
     cards: [
       { title: "Clinical Support", imageAlt: "Healthcare professional providing clinical care", description: "Qualified support focused on health, wellbeing and personal care at home.", items: ["Nursing", "Occupational Therapy", "Physiotherapy", "Allied Health", "Personal Care"] },
@@ -50,7 +50,7 @@ const en = {
   },
   ndis: {
     eyebrow: "NDIS SUPPORT",
-    title: "Support that fits your everyday life.",
+    title: "Support that fits your everyday life",
     intro: "Our team can discuss support options for people with disability and help you understand the next step. NDIS-related services are provided in conjunction with a licensed provider.",
     linkBefore: "For official NDIS eligibility, plan and funding information, visit ",
     linkLabel: "the NDIS website",
@@ -60,7 +60,7 @@ const en = {
   },
   pricing: {
     eyebrow: "PRICING",
-    title: "Clear pricing, without the guesswork.",
+    title: "Clear pricing, without the guesswork",
     intro: "Selected support-worker services start at $76 per hour. Contact our team for pricing on nursing, allied health and other services, so you can plan care around your budget.",
     disclaimer: "The $76/hr starting rate applies to eligible support-worker services only, not all clinical or allied health services. Actual rates, travel, time-of-day loadings, government funding rules and client contributions may vary. Please request a personalised quote.",
     cards: [
@@ -71,7 +71,7 @@ const en = {
   },
   team: {
     eyebrow: "MEET THE TEAM",
-    title: "Experienced people, thoughtful care.",
+    title: "Experienced people, thoughtful care",
     intro: "Meet the people helping clients navigate care, coordinate services and stay connected with their communities.",
     portraitAlt: (name: string) => `${name} team portrait`,
     photoPending: ["Staff photo", "coming soon"],
@@ -83,7 +83,7 @@ const en = {
   },
   why: {
     eyebrow: "WHY LOVE AT HOME",
-    title: "Support built around the person, not a standard package.",
+    title: "Support built around the person, not a standard package",
     intro: "A warm, professional approach that keeps clients, families and carers informed and involved.",
     button: "Talk to our team",
     reasons: [
@@ -99,13 +99,13 @@ const en = {
   sydney: {
     imageAlt: "Sydney Harbour landmark photograph",
     eyebrow: "SYDNEY-WIDE SUPPORT",
-    title: "Welcoming clients from all backgrounds across metropolitan Sydney.",
+    title: "Welcoming clients from all backgrounds across metropolitan Sydney",
     intro: "Love At Home welcomes enquiries from people of all cultural and language backgrounds across Sydney. Our team supports culturally responsive conversations about your care needs.",
     availability: "Service availability may depend on location, service type and staff availability.",
   },
   faq: {
     eyebrow: "COMMON QUESTIONS",
-    title: "Understanding your care options.",
+    title: "Understanding your care options",
     intro: "General guidance on Support at Home and NDIS services. Eligibility, funding and contribution decisions are made by the relevant government agencies.",
     items: [
       { question: "How do I apply for Support at Home?", before: "Start with My Aged Care to check eligibility and arrange an assessment. Our team can explain the services available and assist with next steps while eligibility and funding decisions remain with My Aged Care. ", link: { ...myAgedCareLink, label: "Visit My Aged Care" }, after: "." },
@@ -120,7 +120,7 @@ const en = {
   },
   enquiry: {
     eyebrow: "MAKE AN ENQUIRY",
-    title: "Tell us how we can help.",
+    title: "Tell us how we can help",
     intro: "Share a few details and the Love At Home team can discuss the most suitable next step with you.",
     preferTalk: "Prefer to talk?",
     call: "Call",
@@ -193,7 +193,7 @@ const zh: Copy = {
   hero: {
     eyebrow: "悉尼个性化居家护理服务",
     titleLine1: "用心照护，",
-    titleLine2: "温暖如家。",
+    titleLine2: "温暖如家",
     intro: "我们在悉尼提供 Support at Home 居家养老及 NDIS 相关服务。由临床专业人员带领的团队，为您提供个性化护理、具有竞争力的护理员收费以及有意义的社区联系，并以尊重文化差异的方式提供支持；如适用，相关服务将与持牌服务机构合作提供。",
     primary: "立即咨询",
     secondary: "了解我们的服务",
@@ -210,7 +210,7 @@ const zh: Copy = {
   trustStrip: ["临床专业人员带领的护理团队", "具有竞争力的护理员收费", "尊重文化差异的护理", "社区外出活动与社交联系"],
   services: {
     eyebrow: "我们的服务",
-    title: "实用的日常生活支持。",
+    title: "实用的日常生活支持",
     intro: "为 Support at Home 及 NDIS 客户提供三大类清晰的支持服务，并根据每位客户的需求和情况量身安排。",
     cards: [
       { title: "临床支持", imageAlt: "医护人员提供临床护理", description: "由专业人员提供的居家健康、身心福祉及个人护理支持。", items: ["护理", "职业治疗", "物理治疗", "专职医疗", "个人护理"] },
@@ -230,7 +230,7 @@ const zh: Copy = {
   },
   ndis: {
     eyebrow: "NDIS 支持",
-    title: "贴合您日常生活的支持。",
+    title: "贴合您日常生活的支持",
     intro: "我们的团队可以与残障人士探讨可选的支持方案，并帮助您了解下一步。NDIS 相关服务与持牌服务机构合作提供。",
     linkBefore: "如需了解 NDIS 官方资格、计划及资助信息，请访问",
     linkLabel: "NDIS 官方网站",
@@ -240,7 +240,7 @@ const zh: Copy = {
   },
   pricing: {
     eyebrow: "价格",
-    title: "价格清晰，一目了然。",
+    title: "价格清晰，一目了然",
     intro: "部分护理员服务每小时 $76 起。如需了解护理、专职医疗及其他服务的价格，请联系我们的团队，以便您根据预算规划护理。",
     disclaimer: "每小时 $76 起的价格仅适用于符合条件的护理员服务，并不适用于所有临床或专职医疗服务。实际费率、交通费、不同时段附加费、政府资助规定及客户自付费用可能有所不同。欢迎索取个性化报价。",
     cards: [
@@ -251,7 +251,7 @@ const zh: Copy = {
   },
   team: {
     eyebrow: "认识我们的团队",
-    title: "经验丰富，用心照护。",
+    title: "经验丰富，用心照护",
     intro: "认识我们的团队成员——他们帮助客户了解护理服务、协调各项安排，并与社区保持联系。",
     portraitAlt: (name: string) => `${name} 团队照片`,
     photoPending: ["员工照片", "即将上线"],
@@ -263,7 +263,7 @@ const zh: Copy = {
   },
   why: {
     eyebrow: "为什么选择爱家",
-    title: "以人为本的支持，而非千篇一律的套餐。",
+    title: "以人为本的支持，而非千篇一律的套餐",
     intro: "温暖而专业的服务方式，让客户、家人及照顾者随时了解情况并参与其中。",
     button: "与我们的团队交流",
     reasons: [
@@ -279,13 +279,13 @@ const zh: Copy = {
   sydney: {
     imageAlt: "悉尼港地标照片",
     eyebrow: "服务覆盖悉尼",
-    title: "欢迎悉尼都会区各种背景的客户。",
+    title: "欢迎悉尼都会区各种背景的客户",
     intro: "爱家欢迎悉尼各地不同文化和语言背景的人士咨询。我们的团队以尊重文化差异的方式，与您沟通您的护理需求。",
     availability: "服务提供情况可能因地区、服务类型及员工安排而有所不同。",
   },
   faq: {
     eyebrow: "常见问题",
-    title: "了解您的护理选择。",
+    title: "了解您的护理选择",
     intro: "以下为关于 Support at Home 及 NDIS 服务的一般性指引。资格、资助及自付费用由相关政府机构决定。",
     items: [
       { question: "如何申请 Support at Home？", before: "请先通过 My Aged Care 确认资格并安排评估。我们的团队可以为您介绍可提供的服务并协助后续步骤，资格及资助由 My Aged Care 决定。", link: { ...myAgedCareLink, label: "访问 My Aged Care" }, after: "。" },
@@ -300,7 +300,7 @@ const zh: Copy = {
   },
   enquiry: {
     eyebrow: "在线咨询",
-    title: "告诉我们如何为您提供帮助。",
+    title: "告诉我们如何为您提供帮助",
     intro: "留下一些基本信息，爱家团队将与您探讨最合适的下一步安排。",
     preferTalk: "更想直接沟通？",
     call: "电话",
