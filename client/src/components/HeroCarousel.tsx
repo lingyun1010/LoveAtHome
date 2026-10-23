@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import type { Copy } from "../i18n";
 
-// Client-supplied photos, served from Vite public assets.
+// Homepage care photos, served from Vite public assets.
 const slides = [
-  `${import.meta.env.BASE_URL}images/hero/care-at-home-01.jpg`,
-  `${import.meta.env.BASE_URL}images/hero/clinical-care-02.jpg`,
-  `${import.meta.env.BASE_URL}images/hero/community-outing-03.jpg`,
-  `${import.meta.env.BASE_URL}images/hero/home-living-04.jpg`,
+  `${import.meta.env.BASE_URL}images/hero/care-at-home-01.jpg?v=20261023-asian-care`,
+  `${import.meta.env.BASE_URL}images/hero/clinical-care-02.jpg?v=20261023-asian-care`,
+  `${import.meta.env.BASE_URL}images/hero/community-outing-03.jpg?v=20261023-asian-care`,
+  `${import.meta.env.BASE_URL}images/hero/home-living-04.jpg?v=20261023-asian-care`,
 ];
 
 export function HeroCarousel({ t }: { t: Copy["carousel"] }) {
