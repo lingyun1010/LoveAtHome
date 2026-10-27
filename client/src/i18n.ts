@@ -27,7 +27,7 @@ const en = {
     showSlide: (index: number, total: number) => `Show photograph ${index} of ${total}`,
   },
   trustStripLabel: "Love At Home trust points",
-  trustStrip: ["Clinician-led care team", "Competitive support-worker rates", "Culturally responsive care", "Community outings & connections"],
+  trustStrip: ["Clinician-led care team", "Competitive service rates", "Culturally responsive care", "Community outings & connections"],
   services: {
     eyebrow: "OUR SERVICES",
     title: "Practical support for everyday life",
@@ -50,7 +50,7 @@ const en = {
   },
   ndis: {
     eyebrow: "NDIS SUPPORT",
-    title: "Support that fits your everyday life",
+    title: "NDIS support for everyday life",
     intro: "Our team can discuss support options for people with disability and help you understand the next step. NDIS-related services are provided in conjunction with a licensed provider.",
     linkBefore: "For official NDIS eligibility, plan and funding information, visit ",
     linkLabel: "the NDIS website",
@@ -93,7 +93,7 @@ const en = {
       { title: "Culturally responsive care", text: "An inclusive approach that respects language, culture and identity." },
       { title: "Community connection", text: "Supported outings and social participation that help people build friendships and stay active." },
       { title: "Working as one team", text: "Clinicians, case managers and support workers collaborate closely with clients and families." },
-      { title: "Competitive support-worker rates", text: "Selected support-worker services start at $76 per hour. Ask us for service-specific pricing and contributions." },
+      { title: "Competitive service rates", text: "Selected support-worker services start at $76 per hour. Ask us for service-specific pricing and contributions." },
     ],
   },
   sydney: {
@@ -194,7 +194,7 @@ const zh: Copy = {
     eyebrow: "悉尼个性化居家护理服务",
     titleLine1: "用心照护，",
     titleLine2: "温暖如家",
-    intro: "我们在悉尼提供 Support at Home 居家养老及 NDIS 相关服务。由临床专业人员带领的团队，为您提供个性化护理、具有竞争力的护理员收费以及有意义的社区联系，并以尊重文化差异的方式提供支持；如适用，相关服务将与持牌服务机构合作提供。",
+    intro: "我们在悉尼提供 Support at Home 居家养老及 NDIS 相关服务。由临床专业人员带领的团队，为您提供个性化护理、具有竞争力的服务收费以及有意义的社区联系，并以尊重文化差异的方式提供支持；如适用，相关服务将与持牌服务机构合作提供。",
     primary: "立即咨询",
     secondary: "了解我们的服务",
   },
@@ -207,7 +207,7 @@ const zh: Copy = {
     showSlide: (index: number, total: number) => `显示第 ${index} 张照片（共 ${total} 张）`,
   },
   trustStripLabel: "爱家服务亮点",
-  trustStrip: ["临床专业人员带领的护理团队", "具有竞争力的护理员收费", "尊重文化差异的护理", "社区外出活动与社交联系"],
+  trustStrip: ["临床专业人员带领的护理团队", "具有竞争力的服务收费", "尊重文化差异的护理", "社区外出活动与社交联系"],
   services: {
     eyebrow: "我们的服务",
     title: "实用的日常生活支持",
@@ -230,7 +230,7 @@ const zh: Copy = {
   },
   ndis: {
     eyebrow: "NDIS 支持",
-    title: "贴合您日常生活的支持",
+    title: "NDIS 支持，贴近您的日常生活",
     intro: "我们的团队可以与残障人士探讨可选的支持方案，并帮助您了解下一步。NDIS 相关服务与持牌服务机构合作提供。",
     linkBefore: "如需了解 NDIS 官方资格、计划及资助信息，请访问",
     linkLabel: "NDIS 官方网站",
@@ -273,7 +273,7 @@ const zh: Copy = {
       { title: "尊重文化差异的护理", text: "以包容的方式尊重每个人的语言、文化和身份。" },
       { title: "社区联系", text: "通过有陪同的外出及社交活动，帮助客户结交朋友、保持活跃。" },
       { title: "团队协作", text: "临床人员、个案经理与护理员与客户及其家人紧密合作。" },
-      { title: "具有竞争力的护理员收费", text: "部分护理员服务每小时 $76 起。欢迎咨询具体服务的价格及自付费用。" },
+      { title: "具有竞争力的服务收费", text: "部分护理员服务每小时 $76 起。欢迎咨询具体服务的价格及自付费用。" },
     ],
   },
   sydney: {
