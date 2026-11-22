@@ -20,6 +20,7 @@
   header h1 { font-size: 24px; margin: 0 0 4px; }
   header p { margin: 0 0 24px; color: var(--muted); font-size: 14px; }
   details { background: var(--card); border: 1px solid var(--line); border-radius: 14px; margin-bottom: 12px; overflow: hidden; }
+  .tag-video { flex: none; font-size: 12px; color: #fff; background: var(--accent); padding: 1px 8px; border-radius: 999px; }
   summary { list-style: none; cursor: pointer; padding: 16px 18px; display: flex; gap: 14px; align-items: baseline; }
   summary::-webkit-details-marker { display: none; }
   summary::after { content: "▾"; margin-left: auto; color: var(--muted); transition: transform .2s; }
@@ -32,6 +33,8 @@
   .block { border: 1px solid var(--line); border-radius: 10px; margin-top: 12px; }
   .block-head { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #FBF8F5; border-bottom: 1px solid var(--line); border-radius: 10px 10px 0 0; }
   .block-head span { font-size: 14px; font-weight: 600; flex: 1; }
+  .video { display: block; width: 100%; max-width: 360px; aspect-ratio: 9 / 16; margin: 0 auto; border-radius: 12px; background: #000; }
+  .dl { display: block; text-align: center; margin: 8px 0 4px; color: var(--accent); font-size: 14px; }
   pre { margin: 0; padding: 12px 14px; white-space: pre-wrap; word-break: break-word; font: inherit; }
   button {
     font: inherit; font-size: 14px; cursor: pointer; border: 1px solid var(--accent);
@@ -79,7 +82,9 @@
   (window.DAILY_POSTS || []).forEach((post, i) => {
     const d = el("details");
     const s = el("summary");
-    s.append(el("span", "date", post.date), el("span", "title", post.title));
+    s.append(el("span", "date", post.date));
+    if (post.video) s.append(el("span", "tag-video", "🎬 视频"));
+    s.append(el("span", "title", post.title));
     d.append(s);
 
     const body = el("div", "body");
@@ -89,6 +94,14 @@
     all.onclick = () => copy(fullText, all);
     bar.append(all);
     body.append(bar);
+
+    if (post.video) {
+      const v = el("video", "video");
+      v.src = post.video; v.controls = true; v.playsInline = true; v.preload = "metadata";
+      const dl = el("a", "dl", "⬇️ 下载视频");
+      dl.href = post.video; dl.download = post.video.split("/").pop();
+      body.append(v, dl);
+    }
 
     post.sections.forEach(sec => {
       const b = el("div", "block");
