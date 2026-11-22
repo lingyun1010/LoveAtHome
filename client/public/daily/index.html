@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Love At Home · 每日营销内容</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+<style>
+  :root {
+    --bg: #F8F3EE; --card: #fff; --ink: #2E2A27; --muted: #7A6F66;
+    --line: #E7DDD3; --accent: #B5523B; --accent-soft: #F3E3DC; --ok: #3F7D58;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.7 -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 32px 16px 64px; }
+  header h1 { font-size: 24px; margin: 0 0 4px; }
+  header p { margin: 0 0 24px; color: var(--muted); font-size: 14px; }
+  details { background: var(--card); border: 1px solid var(--line); border-radius: 14px; margin-bottom: 12px; overflow: hidden; }
+  summary { list-style: none; cursor: pointer; padding: 16px 18px; display: flex; gap: 14px; align-items: baseline; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "▾"; margin-left: auto; color: var(--muted); transition: transform .2s; }
+  details[open] summary::after { transform: rotate(180deg); }
+  details[open] summary { border-bottom: 1px solid var(--line); }
+  .date { flex: none; font-size: 13px; font-weight: 600; color: var(--accent); background: var(--accent-soft); padding: 2px 10px; border-radius: 999px; font-variant-numeric: tabular-nums; }
+  .title { font-weight: 600; }
+  .body { padding: 16px 18px 20px; }
+  .toolbar { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+  .block { border: 1px solid var(--line); border-radius: 10px; margin-top: 12px; }
+  .block-head { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #FBF8F5; border-bottom: 1px solid var(--line); border-radius: 10px 10px 0 0; }
+  .block-head span { font-size: 14px; font-weight: 600; flex: 1; }
+  pre { margin: 0; padding: 12px 14px; white-space: pre-wrap; word-break: break-word; font: inherit; }
+  button {
+    font: inherit; font-size: 14px; cursor: pointer; border: 1px solid var(--accent);
+    background: #fff; color: var(--accent); border-radius: 8px; padding: 4px 12px; min-height: 34px;
+  }
+  button:hover { background: var(--accent-soft); }
+  button.primary { background: var(--accent); color: #fff; }
+  button.primary:hover { filter: brightness(.95); }
+  button.done { border-color: var(--ok); color: var(--ok); background: #EAF4EE; }
+  button.primary.done { background: var(--ok); color: #fff; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Love At Home · 每日营销内容</h1>
+    <p>点击日期展开，每一段右侧“复制”即可直接粘贴发布。</p>
+  </header>
+  <div id="list"></div>
+</main>
+<script src="posts.js"></script>
+<script>
+  const list = document.getElementById("list");
+
+  async function copy(text, btn) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const ta = document.createElement("textarea");
+      ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove();
+    }
+    const label = btn.textContent;
+    btn.textContent = "已复制 ✓"; btn.classList.add("done");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("done"); }, 1500);
+  }
+
+  function el(tag, cls, text) {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  (window.DAILY_POSTS || []).forEach((post, i) => {
+    const d = el("details");
+    const s = el("summary");
+    s.append(el("span", "date", post.date), el("span", "title", post.title));
+    d.append(s);
+
+    const body = el("div", "body");
+    const bar = el("div", "toolbar");
+    const all = el("button", "primary", "复制全文");
+    const fullText = post.sections.map(x => x.text).join("\n\n");
+    all.onclick = () => copy(fullText, all);
+    bar.append(all);
+    body.append(bar);
+
+    post.sections.forEach(sec => {
+      const b = el("div", "block");
+      const h = el("div", "block-head");
+      const btn = el("button", null, "复制");
+      btn.onclick = () => copy(sec.text, btn);
+      h.append(el("span", null, sec.label), btn);
+      b.append(h, el("pre", null, sec.text));
+      body.append(b);
+    });
+    d.append(body);
+    list.append(d);
+  });
+</script>
+</body>
+</html>
