@@ -108,6 +108,8 @@ TypeScript, Vite and the other compilation tools intentionally remain developmen
 
 `npm run build:pages` creates a static client-only review build at `client/dist` with the repository base path `/LoveAtHome/`. This build adds `noindex,nofollow` and changes the enquiry form to a clearly labelled preview response without making an API request. The workflow in `.github/workflows/deploy-pages.yml` deploys only this directory; the Express backend and backend environment variables are not included.
 
+The daily marketing content page lives in `daily/` (not `client/public/`) so it is never part of the production build served on loveathome.com.au. The Pages workflow copies it into `client/dist/daily` after `build:pages`, so it is only published at `https://lingyun1010.github.io/LoveAtHome/daily/`.
+
 ## Still required
 
 - Approved Love At Home photography

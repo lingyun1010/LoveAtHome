@@ -47,6 +47,9 @@ jobs:
       - name: Build static frontend preview
         run: npm run build:pages
 
+      - name: Add daily marketing page (GitHub Pages only, not production)
+        run: cp -R daily client/dist/daily
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:
