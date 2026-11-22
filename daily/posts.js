@@ -1,4 +1,4 @@
-// 每日营销内容。新增一天：在数组最前面加一个对象即可（最新的放最上面）。
+// 每日营销内容（只部署到 GitHub Pages，不进 loveathome.com.au 的 production build）。新增一天：在数组最前面加一个对象即可（最新的放最上面）。
 // 每个 section 都是纯文本，会原样复制；用反引号 ` ` 包裹，可直接换行。
 window.DAILY_POSTS = [
   {
